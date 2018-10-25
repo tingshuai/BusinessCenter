@@ -359,3 +359,30 @@ export let displayDesignDel = (data, self) => {
 export let displayDesignGet = (data, self) => {
     return http.fetchPost("/displayDesign/get", data, self)
 }
+
+export let dataDomainGridDefined = (data, self) => {
+    return http.fetchPost("/dataDomain/gridDefined", data, self)
+}
+export let dataDomainAdd = (data, self) => {
+    return http.fetchPost("/dataDomain/add", data, self)
+}
+export let dataDomainEdit = (data, self) => {
+    return http.fetchPost("/dataDomain/edit", data, self)
+}
+export let dataDomainDel = (data, self) => {
+    return http.fetchPost("/dataDomain/del", data, self)
+}
+// 日志
+export let dataLogGrid = (data, self) => {
+    return http.fetchPost("/dataLog/grid", data, self)
+}
+export let dataLogOptionOperateType = (data, self) => {
+    return http.fetchPost("/dataLog/optionOperateType", data, self)
+}
+export let dataLogOptionAppSrc = (data, self) => {
+    return http.fetchPost("/dataLog/optionAppSrc", data, self)
+}
+
+export let dataLogOptionLike = (data, self) => {
+    return http.fetchPost("/dataLog/optionLike", data, self)
+}

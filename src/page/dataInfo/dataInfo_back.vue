@@ -7,9 +7,8 @@
     <div class="infoBlock" :style="{minHeight:sidebarHeight-270+'px'}">
         <!-- 工具条 -->
         <blockToolbar ref="blockToolbar" style="min-height:64px;padding-top:10px;" :config="configToolbar['info']" @itemClicked="toolbarItemClick">
-            <span slot="left" style="display:table;width:440px;float:left;transform: translateY(-1px);">
-                <!-- 运维数据筛选条件表单 -->
-                <qwForm ref="formSearch" @formItemChanged="formSearchItemChanged" v-if="configToolbar.info.rgroup.activeIndex<0" :config="formSearchConfig"></qwForm>
+            <span slot="left" style="display:table;width:600px;float:left;transform: translateY(-1px);">
+                <qwForm  v-if="configToolbar.info.rgroup.activeIndex<0" :config="formSearchConfig"></qwForm>
             </span>
         </blockToolbar>
         <!-- 授权表格 -->
@@ -21,11 +20,11 @@
             <!-- 查询表单 -->
             <div v-if="qwFormConfigQuery" class="formBox">
                 <p class="formP">
-                    <qwForm ref="qwFormQuery"  :config="qwFormConfigQuery"></qwForm>
+                    <qwForm  :config="qwFormConfigQuery"></qwForm>
                 </p>
                 <p class="pFr">
-                    <el-button class="commonBtn" type="primary" size="mini" @click="showData(true,0)">查询数据</el-button>
-                    <el-button class="commonBtn" size="mini" @click="showData(false,0)">取消</el-button>
+                    <el-button class="commonBtn" type="primary" size="mini">查询数据</el-button>
+                    <el-button class="commonBtn" size="mini" @click="showData(false)">取消</el-button>
                 </p>
             </div>
             <p v-else  style="margin-top:24px;font-size:14px;color:#666;text-align:left;">
@@ -41,12 +40,12 @@
             <div v-if="qwTableConfigDisplay" class="formBox">
                 <mytable style="margin-top:24px;" :tableConfig="qwTableConfigDisplay" :tableData="tableDataDisplay" :border="false"></mytable>
                 <p class="pFr">
-                    <el-button class="commonBtn" type="primary" size="mini" @click="showData(true,1)">确定显示</el-button>
-                    <el-button class="commonBtn" size="mini" @click="showData(false,1)">取消</el-button>
+                    <el-button class="commonBtn" type="primary" size="mini" @click="showData(true)">确定显示</el-button>
+                    <el-button class="commonBtn" size="mini" @click="showData(false)">取消</el-button>
                 </p>
             </div>
             <p v-else  style="margin-top:24px;font-size:14px;color:#666;text-align:left;">
-                暂无数据
+                    暂无数据
             </p>
         </div>
         <div class="modBox" v-if="configToolbar.info.rgroup.activeIndex==2">
@@ -62,7 +61,7 @@
                     </p>
                     <p class="pFr">
                         <el-button class="commonBtn" type="primary" size="mini" @click="doAppenedData">{{tableDataMod=="add"?'新增数据':'保存修改'}}</el-button>
-                        <el-button class="commonBtn" size="mini" @click="showData(false,2)">取消</el-button>
+                        <el-button class="commonBtn" size="mini" @click="showData(false)">取消</el-button>
                     </p>
                 </div>
                 <p v-else  style="margin-top:24px;font-size:14px;color:#666;text-align:left;">
@@ -199,7 +198,7 @@ export default {
             fixToolbarStyle:"padding-top:24px;border-bottom:1px dashed #E5E5E5;",
             fixFilterStyle:"border-bottom:1px dashed #E5E5E5;padding: 20px 0 0 0;",
             curRoleNode:null,
-            // curDisplayDesign:null,   
+            curDisplayDesign:null,   
             treeConfig:{
                 treeFilter:{
                         status:0,
@@ -308,8 +307,10 @@ export default {
                                 ],
                                 eventCB:{//回调事件
                                     formBtnClicked:(data)=>{
+                                        console.log("done2",data);
                                         if(data.index==0){
                                             data.self.validate(()=>{
+                                                console.log('add done') 
                                                 let params={
                                                         parentId:data.config.formData.pid,
                                                         treeIdPath:data.config.formData.treeIdPath,
@@ -444,7 +445,10 @@ export default {
                                         nativeType:"button",//button / submit / reset
                                         label:"保存",
                                         class:"",
-                                        style:"width:100px;text-align:center;"
+                                        style:"width:100px;text-align:center;",
+                                        // clicked:(data)=>{
+                                        //     console.log("done",data);
+                                        // }
 
                                     }
                                 ],
@@ -452,6 +456,7 @@ export default {
                                     formBtnClicked:(data)=>{
                                         if(data.index==0){
                                             data.self.validate(()=>{
+                                                console.log('add done') 
                                                 let params={
                                                         id:this.treeConfig.curNode.data.id,
                                                         alias:data.config.formData.name,
@@ -986,7 +991,18 @@ export default {
                                             let page = data.self.$parent.$parent.$parent.$parent
                                             data.self.$parent.$parent.$parent.closeModal();
                                             page.toolbarItemClick({group:"right",index:this.configToolbar.info.rgroup.activeIndex })
-                                        })                                    
+                                        })
+                                        // switch (data.config.formData.mod) {
+                                        //     case "query":
+                                        //         {
+                                                    
+                                        //         }
+                                        //         break;
+                                        
+                                        //     default:
+                                        //         break;
+                                        // }
+                                    //    alert(JSON.stringify(data.config));                                       
                                     },()=>{
                                         console.log('err done')
                                     })
@@ -1109,9 +1125,19 @@ export default {
             formSearchConfig:{
                 labelWidth: 80,
                 itemWidth:200,
-                itemSpan:12,
+                itemSpan:8,
                 items:[
-                     {   
+                    {   
+                        key:'querySchemeId',
+                        name:'查询方案',
+                        type:'select',
+                        controlWidth:"120px",
+                        placeholder:"请选择",
+                        dropDown:{
+                            data:[]
+                        }
+                    },
+                    {   
                         key:'displaySchemeId',
                         name:'显示方案',
                         type:'select',
@@ -1122,35 +1148,22 @@ export default {
                         }
                     },
                     {   
-                        key:'querySchemeId',
-                        name:'查询方案',
+                        key:'manageSchemeId',
+                        name:'运维方案',
                         type:'select',
                         controlWidth:"120px",
                         placeholder:"请选择",
                         dropDown:{
                             data:[]
                         }
-                    },                   
-                    // {   
-                    //     key:'manageSchemeId',
-                    //     name:'运维方案',
-                    //     type:'select',
-                    //     controlWidth:"120px",
-                    //     placeholder:"请选择",
-                    //     dropDown:{
-                    //         data:[]
-                    //     }
-                    // },
+                    },
                 ],
                 formData:{
                     querySchemeId: "",
                     displaySchemeId:"",
                     manageSchemeId:""
                 }
-            },
-            curQueryScheme:null,
-            curDisplayScheme:null,
-            // curManageScheme:null 
+            }   
        }
     },
     mounted(){
@@ -1180,11 +1193,12 @@ export default {
                 }
             }else if(data.i==1){//数据版本切换
                  if(this.configFilter[data.i].items[data.j]){
-                    //获取运维数据筛选下拉 
                     if(this.configToolbar.info.rgroup.activeIndex >= 0){
                         this.toolbarItemClick({group:"right",index:this.configToolbar.info.rgroup.activeIndex })
+                    }else{
+                        /* 初始化 运维数据 */
+                        this.initInfoData();
                     }
-                    this.InitSearchDropDown();
                  }
             }
         },
@@ -1207,15 +1221,13 @@ export default {
         setNoData(noData){
             if(noData){//无数据状态
                 this.configBlock.curMod="info";
-                this.$set(this.table,"tableConfig",null);
-                this.$set(this.table,"tableData",[]);
-                let form=this.$refs.formSearch;
-                if(form){
-                    form.resetForm();
-                }
-                this.$set(this.formSearchConfig.items[0].dropDown,'data',[]);
-                this.$set(this.formSearchConfig.items[1].dropDown,'data',[]);
-                this.qwTableConfigDisplay=null;
+                this.$set(table,"tableData",[]);
+                // this.$set(this.configFilterQuery[0],"items",[]);
+                // this.$set(this.configFilterQuery[0],"activeIndex",0);
+                // this.$set(this.configFilterDisplay[0],"items",[]);
+                // this.$set(this.configFilterDisplay[0],"activeIndex",0);
+                // this.$set(this.configFilterManage[0],"items",[]);
+                // this.$set(this.configFilterManage[0],"activeIndex",0);
             }else{
                 this.configBlock.curMod="info";
                 // 加载infoBlock数据
@@ -1468,8 +1480,7 @@ export default {
                         }                     
                         let scheme = this.configFilterDisplay[0].items[this.configFilterDisplay[0].activeIndex];
                         if(!scheme){
-                            this.$message.error("请选择指定的显示方案！");
-                            this.setNoData(true);
+                            this.$message.error("请选择指定的显示方案！")
                             return;
                         }
                         
@@ -1596,21 +1607,7 @@ export default {
                         temp.push({ ...item, label: item.alias?item.alias :'未命名方案_'+ item.id })
                     }
                     this.$set(this.configFilterQuery[0], "items",temp);
-                    if(this.formSearchConfig.formData.querySchemeId>0){
-                        let tag =false;
-                        for(let attr in temp){
-                            if(temp[attr].id==this.formSearchConfig.formData.querySchemeId){
-                                this.$set(this.configFilterQuery[0], "activeIndex",attr);
-                                tag=true;
-                                break;
-                            }
-                        }
-                        if(!tag){
-                            this.$set(this.configFilterQuery[0], "activeIndex",0);
-                        }
-                    }else{
-                        this.$set(this.configFilterQuery[0], "activeIndex",0);
-                    }
+                    this.$set(this.configFilterQuery[0], "activeIndex",0);
                     if(temp.length==0){
                         this.qwFormConfigQuery=null;
                     }else{
@@ -1646,11 +1643,14 @@ export default {
                     this.$set(this.configFilterDisplay[0], "items",temp);
                     this.$set(this.configFilterDisplay[0], "activeIndex",0);
                     if(temp.length==0){
+                        console.log("显示方案为空")
+                        this.curDisplayDesign=null;
                         this.$set(this.table,"tableConfig",null);
                         this.qwFormConfigDisplay=null;
                     }else{
 
                         this.getDisplayDesign(cb)
+                        // this.getQueryDesign();
                     }
                 }
             })
@@ -1679,7 +1679,7 @@ export default {
                                 this.$message.error("配置解析失败！请重新编辑该查询方案！")                                
                             }else{
                                 if('function'== typeof(cb)){
-                                    // this.curDisplayDesign=res.model;
+                                    this.curDisplayDesign=res.model;
                                     setTimeout(() => {
                                         cb();    
                                     }, 10);  
@@ -1687,7 +1687,7 @@ export default {
                                 this.qwTableConfigDisplay=config_.configView;
                             }
                         }else{
-                            // this.curDisplayDesign=null;
+                            this.curDisplayDesign=null;
                             this.$set(this.table,"tableConfig",null);
                             this.qwFormConfigDisplay=null;
                             this.qwTableConfigDisplay = null;
@@ -1697,6 +1697,9 @@ export default {
                     }
                 })
             }
+            // this.qwTableConfigDisplay
+            // this,tableDataDisplay
+            // console.log("渲染显示方案！！")
         },
         getManageSchemeList(){
             let model=this.getFilter(0);
@@ -1727,6 +1730,8 @@ export default {
                         this.qwFormConfigManage=null
                     }else{
                         this.getManageDesign();
+                        // console.log("渲染显示方案")
+                        // // this.getQueryDesign();
                     }
                 }
             })
@@ -1774,6 +1779,7 @@ export default {
                     }
                 })
             }
+            console.log("渲染运维表单！");
         },
         getQueryDesign(){
              let model=this.getFilter(0);
@@ -1845,56 +1851,41 @@ export default {
         sizeChange(){
             this.getTableData();
         },
-        showData(isWithDisplay=false,id=-1){
+        showData(isWithDisplay=false){
             if(isWithDisplay){
-                switch (id) {
-                    case 0:
-                        {        
-                            let form = this.$refs.qwFormQuery;
-                            if(form){
-                                let tag =false;
-                                for(let attr in form.config.formData){
-                                    if(form.config.formData[attr]!=''){
-                                        tag=true;
-                                        break;
-                                    }
-                                }
-                                if(!tag){
-                                    this.$message.error("查询条件不能为空");
-                                }else{                                    
-                                    let scheme = this.configFilterQuery[0].items[this.configFilterQuery[0].activeIndex];
-                                    this.$set(this.configToolbar.info.rgroup,"activeIndex",-1);
-                                    setTimeout(() => {                                
-                                        this.$set(this.formSearchConfig.formData,this.formSearchConfig.items[1].key,scheme.id);
-                                        this.refreshCurData(JSON.parse(JSON.stringify(form.config.formData)));
-                                    }, 0);
-
-                                }
-                            }   
-                        }
-                        break;
-                    case 1:{
-                        let scheme = this.configFilterDisplay[0].items[this.configFilterDisplay[0].activeIndex];
-                            this.$set(this.configToolbar.info.rgroup,"activeIndex",-1);
-                            setTimeout(() => {
-                                this.$set(this.formSearchConfig.formData,this.formSearchConfig.items[0].key,scheme.id);
-                                this.refreshCurData();
-                            }, 0);
-                    }break; 
-
-                    default:
-                        break;
-                }
+                this.getDisplayDesign(()=>{
+                    let config = JsonParse(this.curDisplayDesign.config);
+                    if(config){
+                        config.configView.isPage=true;
+                        config.configView.colConfig.push({
+                            type:'btnsTextWithMethod',
+                            label:"操作",
+                            fields:[
+                                {
+                                    name:"新增",
+                                    method:"add"
+                                },
+                                {
+                                    name:"编辑",
+                                    method:"edit"
+                                },
+                                {
+                                    name:"删除",
+                                    method:"del"
+                                },
+                            ]
+                        })
+                        this.$set(this.configToolbar.info.rgroup,"activeIndex",-1);
+                        this.$set(this.table,'tableConfig',config.configView);
+                        this.$set(this.table,'tableData',[]);
+                        setTimeout(() => {
+                            this.getTableData();
+                        }, 30);
+                    }else{
+                        console.log("显示方案为空！")
+                    }
+                })
             }else{
-                switch (id) {
-                    case 0:
-                        {
-                            this.$set(this.formSearchConfig.formData,"querySchemeId","");
-                        }
-                        break;
-                    default:
-                        break;
-                }
                 this.$set(this.configToolbar.info.rgroup,"activeIndex",-1);
             }
             
@@ -1911,86 +1902,54 @@ export default {
             this.toolbarItemClick({group:"right",index:this.configToolbar.info.rgroup.activeIndex })
         },
         delData(data){
+            // console.log("delData",data);
             let params = {id : data.val.id};
             dataDomainDel({Vue:this,params:params}).then(res=>{
                 this.$message.success("操作成功！");  
                 this.table.tableData.splice(data.index,1);
             })
         },
-        initTableConfig(searchData = null){
-            if(!this.curDisplayScheme){
-                this.$message.error("请选择指定的显示方案！");
-                this.setNoData(true);                
-                return;
-            }else{
-                let params = {
-                    modelId: this.curDisplayScheme.modelId,
-                    varsionId: this.curDisplayScheme.versionId,
-                    schemeId: this.curDisplayScheme.id
+        initInfoData(){
+            this.getDisplaySchemeList(()=>{
+            // table.tableConfig
+                let config = JsonParse(this.curDisplayDesign.config);
+                if(config){
+                    config.configView.isPage=true;
+                    config.configView.colConfig.push({
+                        type:'btnsTextWithMethod',
+                        label:"操作",
+                        fields:[
+                            {
+                                name:"新增",
+                                method:"add"
+                            },
+                            {
+                                name:"编辑",
+                                method:"edit"
+                            },
+                            {
+                                name:"删除",
+                                method:"del"
+                            },
+                        ]
+                    })
+                    this.$set(this.table,'tableConfig',config.configView);
+                    this.$set(this.table,'tableData',[]);
+                    this.getTableData();
                 }
-                displayDesignGet({Vue:this,params}).then(res=>{
-                    if(res.model.config){
-                        let config= JsonParse(res.model.config);
-                            if(config){
-                                config.configView.isPage=true;
-                                config.configView.colConfig.push({
-                                    type:'btnsTextWithMethod',
-                                    label:"操作",
-                                    fields:[
-                                        {
-                                            name:"新增",
-                                            method:"add"
-                                        },
-                                        {
-                                            name:"编辑",
-                                            method:"edit"
-                                        },
-                                        {
-                                            name:"删除",
-                                            method:"del"
-                                        },
-                                    ]
-                                })
-                                // this.this.curDisplayDesign=res.model;
-                                this.$set(this.table,'tableConfig',config.configView);
-                                this.$set(this.table,'tableData',[]);
-                                this.getTableData(searchData);
-                            }else{
-                                this.$message.error("显示方案解析失败！请刷新重试~");
-                                this.setNoData(true);
-                                // alert("noData");
-                            }
-                    }else{
-                        // alert('nodata')
-                        this.setNoData(true)
-                    }
-                   
-                })
-            }
+            
+                console.log("done！===>",this.table)
+            });
+            console.log("initInfoData!")
         },
-        getTableData(searchData = null){
+        getTableData(){
             let dataDomain ={}
-            let params;
-            if(searchData){
-                console.log("searchData==>",searchData)
-                for(let attr in searchData){
-                    if(''!=searchData[attr])dataDomain[attr.replace(/^item_/,'')] = searchData[attr]
-                }
-                // params = {
-                //     versionId: this.curQueryScheme.versionId,
-                //     modelId: this.curQueryScheme.modelId,
-                //     schemeId: this.curQueryScheme.id
-                // } 
-                // queryDesignGet({Vue:this,params:params}).then(res=>{
-                //     console.log("getTableData=this.curQueryScheme=>",res.model.structureIds);
-                // })
-            }
-            params={
+            let params={
                     pageSize : this.table.tableConfig.pageSize,
                     pageNo   : this.table.tableConfig.pageNo,
-                    modelId: this.curDisplayScheme.modelId,
-                    versionId: this.curDisplayScheme.versionId,
-                    displaySchemeId: this.curDisplayScheme.id
+                    displaySchemeId : this.curDisplayDesign.schemeId,
+                    modelId: this.curDisplayDesign.modelId,
+                    versionId: this.curDisplayDesign.versionId,
             }
             params.dataDomain= JSON.stringify(dataDomain);
             // 待完成...查询条件未添加
@@ -2069,95 +2028,7 @@ export default {
                     }
                 })
             }
-        },
-        /*初始化筛选下拉框*/ 
-        InitSearchDropDown(){
-            let model = this.getFilter(0);
-            let version = this.getFilter(1);
-            if(!model||(!version)){
-                return
-            }else{
-                let params = {
-                    modelId:model.id,
-                    versionId:version.id
-                }
-               
-                displaySchemeList({Vue:this,params:params}).then(res=>{
-                     if(res.model){
-                        let temp=[];
-                        for(let item of res.model){
-                            temp.push({...item, label:item.alias,value:item.id});
-                        }
-                        // this.$set(this.formSearchConfig.items[1].dropDown,'data',temp)
-                        this.$set(this.formSearchConfig.items[0].dropDown,'data',temp)
-                        if(temp.length>0){
-                             this.$set(this.formSearchConfig.formData,"displaySchemeId",temp[0].value);
-                        }else{
-                            this.$set(this.formSearchConfig.formData,"displaySchemeId","");
-                        }
-                    }
-                    querySchemeList({Vue:this,params:params}).then(res=>{
-                        if(res.model){
-                            let temp=[];
-                            for(let item of res.model){
-                                temp.push({...item, label:item.alias,value:item.id});
-                            }
-                            // this.$set(this.formSearchConfig.items[0].dropDown,'data',temp)
-                            this.$set(this.formSearchConfig.items[1].dropDown,'data',temp)
-                            this.$set(this.formSearchConfig.formData,"querySchemeId","");
-                            this.refreshCurData();
-                        }
-                    })
-
-                })
-            }
-        },
-        refreshCurData(searchData = null){
-            let val = this.formSearchConfig.formData.querySchemeId;
-            let schemeList;
-            if(val){
-                schemeList = this.formSearchConfig.items[1].dropDown.data;
-                for(let item of schemeList){
-                    if(val== item.value){
-                        this.curQueryScheme = item;
-                        break;
-                    }
-                }
-            }else{
-                 this.curQueryScheme = null;
-            }               
-            val = this.formSearchConfig.formData.displaySchemeId; 
-            if(val){
-                schemeList = this.formSearchConfig.items[0].dropDown.data;
-                for(let item of schemeList){
-                    if(val== item.value){
-                        this.curDisplayScheme = item;
-                        break;
-                    }
-                }
-            }else{
-                this.curDisplayScheme = null;
-            }
-            this.initTableConfig(searchData); 
-        },
-        formSearchItemChanged(data){
-            switch (data.item.key) {
-                case "querySchemeId":
-                    {
-                        this.$set(this.configToolbar.info.rgroup,'activeIndex',0);
-                        this.toolbarItemClick({group:"right",index:this.configToolbar.info.rgroup.activeIndex })
-                    }
-                    break;
-                case "displaySchemeId":
-                    {
-                        this.refreshCurData();
-                    }
-                    break;
-            
-                default:
-                    break;
-            }            
-        }    
+        }                
     }
 }
 </script>

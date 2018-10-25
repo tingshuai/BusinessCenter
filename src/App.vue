@@ -1,21 +1,21 @@
 <template>
 <div class="qw_app_root">
    <qwMenu></qwMenu>
-   <qwEditer></qwEditer>
-   <index :appUrl="appUrl"  :userName="userName" :userImg="userImg" :companyName="companyName" :companyEnglish="companyEnglish" :companyLogo="companyLogo"></index>
+   <!-- <qwEditer></qwEditer> -->
+   <index :appUrl="appUrl" :appName="appName" :userName="userName" :userImg="userImg" :companyName="companyName" :companyEnglish="companyEnglish" :companyLogo="companyLogo"></index>
 </div>  
 </template>
 <script>
 import {mapMutations,mapGetters,mapState} from 'vuex';
 import index from "./page/index.vue"
 import qwMenu from "./components/qwform/qwMenu.vue"
-import qwEditer from "./components/setting/editer.vue"
+// import qwEditer from "./components/setting/editer.vue"
 var vueObj={
-    props:["appUrl", "userName", "userImg","companyName","companyEnglish","companyLogo"],
+    props:["appUrl", "userName", "userImg","companyName","companyEnglish","companyLogo","appName"],
     components:{
       index,
       qwMenu,
-      qwEditer
+      // qwEditer
     },
     created(){
         window.localStorage.setItem('ports',this.appUrl);

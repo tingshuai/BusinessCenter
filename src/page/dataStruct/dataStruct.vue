@@ -1500,8 +1500,10 @@ export default {
             this.addTableData()
         },
         /*删除1行数据*/
-        delLine(row){
-            console.log("this.configBlock.modEdit.mod",this.configBlock.modEdit.mod)
+        delLine(data){
+            let row = data.val;
+            // console.log("delLine====>",row)
+            // console.log("this.configBlock.modEdit.mod",this.configBlock.modEdit.mod)
             if(this.configBlock.modEdit.mod=="add"||(this.configBlock.modEdit.mod=="edit")){
                 for(let attr in this.configBlock.modEdit.table.tableData){
                     if(row==this.configBlock.modEdit.table.tableData[attr]){
@@ -1715,16 +1717,19 @@ export default {
                 }
             })
         },
-        startAble(data){
+        startAble(row){
+            let data = row.val;
             let params={id:data.id,isAble:!data.isAble}
             this.setAble(params);
             // console.log("startAble",...arguments)
         },
-        stopAble(data){
+        stopAble(row){
+            let data = row.val;
             let params={id:data.id,isAble:!data.isAble}
             this.setAble(params);
         },
-        setTag(data){
+        setTag(row){            
+            let data = row.val;
             let params={"id":data.id,"isKey":!data.isKey}
             structureEdit({Vue:this,params:params}).then(res=>{
                 if(res.result){
@@ -1732,7 +1737,6 @@ export default {
                     this.nodeLabelClicked(this.treeConfig.curNode,this.treeConfig.curNode.data);
                 }
             })
-            console.log(data);
         },
         selectChangeTableEdit(data){
             if(data.item.field=="dataType"){

@@ -1,17 +1,14 @@
 <template>
 <div class="lTree">
     <el-form class="treeForm" style="padding:14px;box-sizing:border-box;">
-        <!-- <el-select @change="treeStatusChange" class="treeSelect" v-model="config.treeFilter.status">
-            <el-option v-for="(item,i) in config.dropDown.treeStatus" :label="item.label" :value="item.value" :key="i"></el-option>
-        </el-select>   -->
         <el-input placeholder="请输入关键字" class="treesearch" style="width:304px;" @change="treeStatusChange" @input="treeStatusChange" v-model="config.treeFilter.keyWords">
             <el-button slot="append" @click="treeStatusChange">搜索</el-button>
         </el-input>    
     </el-form>
-    <div class="treeBox qwscroll" :style="{ height:((sidebarHeight) * 0.6)-170+'px'}">
+    <div class="treeBox qwscroll" :style="'padding-bottom:0;height:' + (this.leftTreeNum==2?parseInt((parseInt(this.sidebarHeight)) * 0.6)-170 : (parseInt(this.sidebarHeight)-194)) + 'px'">
     <el-tree  ref="lTree"
         :props="config.propsTree"
-        :style="{minHeight:((sidebarHeight-270) * 0.5)+'px',width:(320+ (config.maxLevel>1 ? (config.maxLevel-3)*24 : 0)) + 'px'}"
+        :style="{minHeight: (this.leftTreeNum==2?parseInt((parseInt(this.sidebarHeight)) * 0.6)-200 : (parseInt(this.sidebarHeight)-220))+'px',width:(320+ (config.maxLevel>1 ? (config.maxLevel-3)*24 : 0)) + 'px'}"
         :data="config.treeData"
         :show-checkbox="false"
         node-key="id"
@@ -19,26 +16,6 @@
         :expand-on-click-node="false">
         <span class="custom-tree-node" style="display:block;" slot-scope="{ node, data }">            
             <span style="display:inline;cursor:pointer;" ><i v-if="(!node.loading)" @click="changeExpended(node,data)" :class="{'el-icon-caret-right':!node.expanded,'el-icon-caret-top':node.expanded,'el-icon-loading1': node.loading}"></i><label :ref="'qwModelTreeLabel_'+data.id"  :class="(config.curNode && (node.id==config.curNode.id))? 'curNode':''" @click="nodeLabelClicked(node,data)">{{ node.label }}</label></span>
-            <span>
-                <!-- <el-button type="text" size="mini" @click="() => append(data,node)">
-                    <img class="tree_after_icon add" :src="emptySrc" alt="添加">
-                </el-button>              
-                <el-button v-if="data.id>0" type="text" size="mini" @click="() => edit(node, data)">
-                    <img class="tree_after_icon edit" :src="emptySrc" alt="编辑">
-                </el-button>              
-                <el-button v-if="data.id>0" type="text" size="mini"  @click="() => remove(node, data)">
-                    <img class="tree_after_icon del" :src="emptySrc" alt="删除">
-                </el-button>
-                <el-button v-if="data.isAble&&data.id>0" type="text" @click="setAble(node, data)" size="mini">
-                <img class="tree_after_icon stop" :src="emptySrc" alt="停用">
-                </el-button>
-                <el-button v-if="!data.isAble&&(data.id>0)" type="text" @click="setAble(node, data)" size="mini">
-                <img class="tree_after_icon run" :src="emptySrc" alt="启用">
-                </el-button>
-                <el-button v-if="data.id>0" type="text" size="mini" @click="nodeDetail(node,data)">
-                <img class="tree_after_icon see" :src="emptySrc" alt="查看详情">
-                </el-button> -->
-            </span>
         </span>
     </el-tree>    
     <qwModalForm ref="qwModalFormTree" :config="config.treeDialogConfig"></qwModalForm>
@@ -67,6 +44,12 @@ export default {
         qwModalForm
     },
     props:{
+        leftTreeNum:{
+            type: Number,
+            default:()=>{
+                return 2
+            }
+        },
         config:{
             type: Object,
             default:()=>{
@@ -98,7 +81,7 @@ export default {
                         {
                         id: 0,
                         isEdit:false,
-                        label: '所有仓库',
+                        label: '所有角色',
                         children:[]
                         }
                     ],
@@ -500,13 +483,24 @@ export default {
     },
     data(){
         return {
+            treeHeight: 0,
+            treeBoxStyle:'',
             emptySrc:"data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==",
         }
     },
+
     computed:{
         ...mapState({
-            sidebarHeight : state=> state.app.sidebarHeight
-        })
+            sidebarHeight : (state)=>{
+                this.treeBoxStyle = 'height:'+ ((state.app.sidebarHeight)- 270)+'px;'
+                return  state.app.sidebarHeight
+            } 
+        }),
+    },
+    watch:{
+        sidebarHeight(val,val_){
+            console.log("this.sidebarHeight up",val,val_)
+        }
     },
     mounted(){
         this.init();
@@ -514,6 +508,8 @@ export default {
     methods:{
         /*初始化*/
         init(){
+            this.treeHeight= (this.leftTreeNum==2?parseInt((parseInt(this.sidebarHeight)) * 0.6)-200 : (parseInt(this.sidebarHeight)-220));
+            this.treeBoxStyle = 'padding-bottom:0;height:' + (this.leftTreeNum==2?parseInt((parseInt(this.sidebarHeight)) * 0.6)-170 : (parseInt(this.sidebarHeight)-194)) + 'px'
             let node=this.$refs['lTree'].$children[0].node;
             let data=node.data;
             this.loadTree(node,data);

@@ -118,6 +118,7 @@
                 align-items: center;
                 justify-content: space-between;
                 font-size: 14px;
+                line-height: 26px;
                 padding-right: 8px;
                 span{
                     -webkit-touch-callout: none; /* iOS Safari */
@@ -127,12 +128,34 @@
                     -ms-user-select: none; /* Internet Explorer/Edge */
                     user-select: none; /* Non-prefixed version, currently not supported by any browser */
                 }
+                .nodeLabel{
+                    display: inline-block;
+                    width: 120px;
+                    line-height: 26px;
+                    word-wrap: nowrap;
+                    overflow: hidden;
+                    -o-transform: translateY(8px);
+                    -ms-transform: translateY(8px);
+                    -moz-transform: translateY(8px);
+                    -webkit-transform: translateY(8px);
+                    transform: translateY(8px);
+                }
+                .menusBox{
+                    float: right;
+                    -o-transform: translateY(8px);
+                    -ms-transform: translateY(8px);
+                    -moz-transform: translateY(8px);
+                    -webkit-transform: translateY(8px);
+                    transform: translateY(8px);
+
+                }
                 .el-button+.el-button{
                     margin-left: 0;
+                    padding: 0;
                 }
                 .tree_after_icon{
                     display: inline-block;
-                    width: 30px;
+                    width: 20px;
                     height: auto;
                     background: url("../../assets/img/tree/bg_icon.png") no-repeat;
                     // background-size: 30px 30px;
@@ -141,27 +164,27 @@
                     background-color:rgb(240, 239, 245);
                 }
                 .tree_after_icon.add{
-                     background-position: 4px -3px; 
+                     background-position: -2px -3px; 
                 }
                 .tree_after_icon.edit{
-                     background-position: -25px -3px; 
+                     background-position: -30px -3px; 
                 }
                 .tree_after_icon.del{
-                     background-position: -53px -3px; 
+                     background-position: -58px -3px; 
                 }                
                 .tree_after_icon.run{
-                     background-position: -80px -3px; 
+                     background-position: -86px -3px; 
                 }                
                 .tree_after_icon.stop{
                     display: inline-block;
-                    width: 30px;
+                    // width: 20px;
                     height: 22px;
                     text-align: center;
                     background: url("../../assets/img/tree/stop.png") no-repeat;
-                    background-position: 7px -3px; 
+                    background-position: 1px -3px; 
                 }
                 .tree_after_icon.see{
-                     background-position: -108px -3px; 
+                     background-position: -114px -3px; 
                 }
                 .el-input{
                     width: auto;

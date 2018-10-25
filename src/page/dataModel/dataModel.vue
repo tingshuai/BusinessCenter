@@ -1,6 +1,6 @@
 <template>
 <div class="qwCommonPage">
-<modelTree ref="modelTree" :config="treeConfig" @delNode="BeforNodeDelete" @nodeLabelClicked="nodeLabelClicked"></modelTree>
+<modelTree ref="modelTree" :showMenus="true" :config="treeConfig" @delNode="BeforNodeDelete" @nodeLabelClicked="nodeLabelClicked"></modelTree>
 <div class="rbox">
     <!-- 过滤条件 -->
     <div class="filterBlock">

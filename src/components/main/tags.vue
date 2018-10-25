@@ -94,11 +94,11 @@ var vueObj={
 		closeTag(id){
 			this.REMOVE_TAG(id);
 			if(this.tagsActiveIndex==id){
-				if(this.tags[id]){
-					this.setActive(id);
-				}else{
+				// if(this.tags[id]){
+				// 	this.setActive(id);
+				// }else{
 					this.setActive(0);
-				}
+				// }
 			}else {
 			 	this.setActive(0)
 			 }

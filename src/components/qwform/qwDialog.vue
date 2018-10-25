@@ -67,15 +67,9 @@ let qwDialogObj={
         close(){
             this.$emit("close",{self:this})
             this.config.dialogVisible=false;
-            // console.log(this);
-            // this.config.dialogVisible=false;
-            // console.log("close",...arguments);
-            // this.$emit("close",...arguments);
         },
         closed(){
             this.$emit("closed")
-            // console.log(this)
-            // this.$emit("closed",...arguments);
         },
         beforeCloseReal(done){
             if('function'==typeof(this.config.beforeClose)){

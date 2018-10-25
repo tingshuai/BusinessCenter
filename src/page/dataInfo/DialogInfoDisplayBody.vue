@@ -6,12 +6,8 @@
 <div class="r">
     <div class="formsel">
         <h3 class="sel_title">表单预览</h3>
-        <!-- {{checkItems}} -->
-        <br>
-        {{configitems}}
-        <!-- {{configView}}
-        {{configitems}}   @selectChange="selectChangeTableEdit"-->
         <mytable style="margin-top:24px;" v-if="configView" :tableConfig="configView" :tableData="tableData" :border="false"></mytable>
+         <p v-else style="font-size:14px;color:#666;text-align:left;">暂无数据</p>
     </div>
     <div class="formdesign">
          <h3 class="design_title" style="margin-bottom:0;">查询方案 
@@ -182,65 +178,8 @@ export default {
                             transVal:"",
                         },
                         formBtnsStyle:"text-align:left;margin-left:100px;",
-                        formBtns:[
-                            // {
-                            //     size:"mini",//medium / small / mini
-                            //     type:"primary",//primary / success / warning / danger / info / text
-                            //     plain:false,//是否朴素
-                            //     round:false,//是否圆角按钮
-                            //     circle:false,//是否圆形按钮
-                            //     loading:false,//是否加载中状态
-                            //     disabled:false,//是否禁用
-                            //     icon:"",//图标class
-                            //     autofocus:false,//自动获取焦点
-                            //     nativeType:"button",//button / submit / reset
-                            //     label:"点击预览",
-
-                            //     class:"",
-                            //     style:"width:100px;border-radius:0;text-align:center;",
-                            //     // clicked:(data)=>{
-                            //     //     console.log("done",data);
-                            //     // }
-
-                            // }
-                        ],
-                        eventCB:{//回调事件
-                            // formBtnClicked:(data)=>{
-                            //     let that =this;
-                            //     if(data.index==0){
-                            //         data.self.validate(()=>{
-                            //             let formData = data.config.formData;
-                            //             if(!that.configitems)that.configitems={};
-                            //             that.$set(that.configitems,"item_"+ formData.field,formData);
-                            //             // alert(JSON.stringify(formData));
-                            //             // switch (data.config.formData.mod) {
-                            //             //     case "query":
-                            //             //         {
-                            //             //             let formData = data.config.formData;
-                            //             //             let params = {
-                            //             //                 id:formData.id,
-                            //             //                 alias: formData.alias
-                            //             //             }
-                            //             //             displaySchemeEdit({Vue:this,params:params}).then(res=>{
-                            //             //                 this.$message.success("操作成功！")
-                            //             //                 let page = data.self.$parent.$parent.$parent.$parent
-                            //             //                 data.self.$parent.$parent.$parent.closeModal();
-                            //             //                 page.toolbarItemClick({group:"right",index:this.configToolbar.info.rgroup.activeIndex })
-                            //             //             })
-                            //             //         }
-                            //             //         break;
-                                        
-                            //             //     default:
-                            //             //         break;
-                            //             // }
-                            //         //    alert(JSON.stringify(data.config));                                       
-                            //         },()=>{
-                            //             console.log('err done')
-                            //         })
-                            //     }
-                            //     return false;
-                            // }
-                        }
+                        formBtns:[ ],
+                        eventCB:{/*回调事件*/ }
             },
         }
     },
@@ -323,14 +262,16 @@ export default {
             let val=data.config.formData[data.item.key];
             switch (data.item.key) {
                 case "field":{
-                    if(this.configitems["item_"+val][attr]){
+                    if(this.configitems["item_"+val]){
                         for(let attr in this.formDesignConfig.formData){
                             this.$set(this.formDesignConfig.formData,attr,this.configitems["item_"+val][attr]);
                         }
-                    }
-                    if(this.formDesignConfig.formData.itemWidthType==""){
+                    }else{
                         this.$set(this.formDesignConfig.formData,"itemWidthType",'0');
                         this.$set(this.formDesignConfig.items[2],"disabled" , true);
+                        this.$set(this.formDesignConfig.formData,"order" , 0);
+                        this.$set(this.formDesignConfig.formData,"transVal" , "");
+                        
                     }
                 }break;
                 case "itemWidthType":
@@ -429,14 +370,66 @@ export default {
             // this.checkItems=[];
             // this.configView=null;
         },
+        checkDesign(cb = ()=>{}){
+            let temp = {};
+            for(let attr in this.checkItems){
+                if(!(this.configitems['item_'+this.checkItems[attr].id])){
+                    temp['item_'+this.checkItems[attr].id] = { "field": this.checkItems[attr].id, "itemWidthType": "0", "itemWidth": 0, "order": 0, "transVal": "" };
+                    // this.$message.error("请配置表格列：“" + this.checkItems[attr].label + "”")
+                    // return;
+                }else{
+                    temp['item_'+this.checkItems[attr].id] =  this.configitems['item_'+this.checkItems[attr].id];
+                }
+            }
+            this.configitems = temp;
+            if("function"==typeof(cb)){
+                cb();
+            }
+        },
         saveScheme(){
-
+            this.checkDesign(()=>{
+                let that =this;
+                this.$refs.formSheme.validate((valid) => {
+                    if (valid) {
+                        if(that.mod=="edit"){
+                            if(that.curDesignId){
+                                let params={
+                                    id: that.curDesignId,
+                                    config: formatJson({configView:that.configView,configitems:that.configitems,configEvents:this.configEvents})
+                                }
+                                displayDesignEdit({Vue:that,params:params}).then(res=>{
+                                    that.$message.success("操作成功！");
+                                    that.close();
+                                })
+                            }else{
+                                let params = { modelId:that.model.id,versionId:that.version.id,alias:that.formScheme.formData.schemeName};
+                                params.schemeId = that.scheme.id;
+                                params.structureIds ="";
+                                let ids=[];
+                                for(let item of that.checkItems){
+                                    ids.push(item.id);
+                                }
+                                params.structureIds= ids.join();
+                                params.config= formatJson({configView:that.configView,configitems:that.configitems});
+                                displayDesignAdd({Vue:that,params:params}).then(res=>{
+                                    that.$message.success("操作成功！");
+                                    that.close();
+                                })
+                            }
+                        }
+                    }                
+                });
+            })
         },
         close(){
-
+            this.reset();
+            this.$emit("close");
         },  
         clearFormDesign(){
-            // this.$refs
+            let formdesign = this.$refs.qwformDesign;
+            if(formdesign){
+                qwformDesign.resetForm();
+            }
         }, 
         saveDesignForm(){
             this.$refs.qwformDesign.validate(()=>{

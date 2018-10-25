@@ -73,7 +73,7 @@ let TableEx = {
       this.$emit("selectChange",data)
     },
 		callBack(data) {
-			this.$emit(data.method,data.val,data.index);
+			this.$emit(data.method,data);
 		},
 		toolbarBack(data) {
 			//操作按钮回调

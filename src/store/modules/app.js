@@ -4,6 +4,7 @@ const app = {
         loadingTag:0,                                       //加载标志
         userName:'',                                        //用户名称
         userImg:'',                                         //用户头像
+        appName:"",
         companyName:'',                                     //公司名称(中文)
         companyEnglish:'',                                  //公司名称(英文)
         companyLogo:'',                                     //LOGO
@@ -23,6 +24,9 @@ const app = {
         SET_LOADING_TAG:(state,data)=>{
             state.loadingTag += parseInt(data)
             // console.log("SET_LOADING_TAG", data, 'loadingTag', state.loadingTag)
+        },
+        SET_APP_NAME:(state,data)=>{
+            state.appName = data
         },
         SET_USER_NAME:(state,data)=>{                       //设置用户名称
             state.userName = data

@@ -11,6 +11,7 @@
         <!-- {{formatJson(configView)}}<br> -->
         <!-- <br> -->
         <!-- {{configitems}} -->
+        <!-- {{configRules}} -->
             <qwform v-if="configView" :config="configView"></qwform>
             <p v-else style="font-size:14px;color:#666;text-align:left;">暂无数据</p>
         <div style="clear:both;"></div>    
@@ -57,6 +58,9 @@
     <qwDialog :config="DialogEvent">
         <formEventBody ref="formEventBody" @saveEvents="DialogEventSaveEvents" @cancel="DialogEventCanceled" />
     </qwDialog>
+    <qwDialog :config="DialogRule">
+        <formRuleBody ref="formRuleBody" @saveRule="saveRule" @close="closeDialogRule"></formRuleBody>
+    </qwDialog>
 </div>    
 </template>
 <script>
@@ -65,6 +69,7 @@ import qwform from "../../components/qwform/qwform.vue"
 import qwDialog from "../../components/qwform/qwDialog.vue"
 import qwMoalForm from "../../components/qwform/qwMoalForm.vue"
 import formEventBody from "./fromEventBody.vue"
+import formRuleBody from "./formRuleBody.vue"
 import http from '../../api/base.js'
  const isJSON_test=(str) => {
     if (typeof str == 'string') {
@@ -104,7 +109,8 @@ export default {
         qwform,
         qwDialog,
         qwMoalForm,
-        formEventBody
+        formEventBody,
+        formRuleBody
     },
     data(){
         return {
@@ -119,6 +125,27 @@ export default {
             scheme:  null,
             DialogEvent:{
                         title:"事件管理",
+                        titleStyle:"background:#FFF;",
+                        dialogVisible:false,
+                        width:"1224px",
+                        fullscreen:false,
+                        top:"15vh",
+                        modal:false,//遮罩
+                        modalAppendToBody:true,
+                        appendToBody:false,
+                        lockScroll:true,
+                        customClass:"",
+                        closeOnClickModal:true,
+                        closeOnPressEscape:true,
+                        showClose:true,
+                        center:false,
+                        beforeClose:()=>{
+                            let dialog = this.$refs.formEventBody;
+                            if(dialog)dialog.reset();
+                        }
+            },
+            DialogRule:{
+                        title:"规则管理",
                         titleStyle:"background:#FFF;",
                         dialogVisible:false,
                         width:"1224px",
@@ -314,6 +341,22 @@ export default {
                         class:"",
                         style:"width:100px;text-align:center;border-radius:0;"
                     },
+                    {
+                        size:"small",//medium / small / mini
+                        type:"primary",//primary / success / warning / danger / info / text
+                        plain:false,//是否朴素
+                        round:false,//是否圆角按钮
+                        circle:false,//是否圆形按钮
+                        loading:false,//是否加载中状态
+                        disabled:false,//是否禁用
+                        icon:"",//图标class
+                        autofocus:false,//自动获取焦点
+                        nativeType:"button",//button / submit / reset
+                        label:"规则管理",
+                        badge:0,
+                        class:"",
+                        style:"width:100px;text-align:center;border-radius:0;"
+                    },
                    
                 ],
                 eventCB:{//回调事件
@@ -338,6 +381,9 @@ export default {
                                 {
                                     this.showDialogFormEvent();
                                 }break;
+                            case 2:{
+                                this.showDialogRules();
+                            }break;
                             default:
                                 break;
                         }
@@ -728,6 +774,7 @@ export default {
                                 }
                         },
                         configEvents:{},
+                        configRules:{},
         }
     },
     methods:{
@@ -780,10 +827,12 @@ export default {
             if(!config){
                 this.configitems =[];
                 this.configView = null;
+                this.configRules ={};
                 this.$refs.modelStructureTree.setCheckedKeys([]);
             }else{
                 this.configView = config.configView;
                 this.configitems = config.configitems;
+                this.configRules = config.configRules? config.configRules : {};
                 this.configEvents = config.configEvents? config.configEvents : {};
                 let keys= [];
                 for(let attr in config.configitems){
@@ -1085,10 +1134,21 @@ export default {
                     }
                 }
             }
-            config.labelWidth = lblMax*14 +12 +'px'; 
+            config.labelWidth = lblMax*14 +26 +'px';
+            config=this.buildRules(config); 
             this.configView=config;
             // this.isConfigOK = tag;
         
+        },
+        /*配置rules*/
+        buildRules(config){
+            if(!config ||(!config.items))return;
+            for(let attr in config.items){
+                if(this.configRules[config.items[attr].key]){
+                    config.items[attr].rules = this.configRules[config.items[attr].key];
+                }
+            }
+            return config;
         },
         /*根据事件配置项生成回调函数*/
         buildEventCbByConfigEvents(events,config,conf,evtName){
@@ -1129,6 +1189,11 @@ export default {
                                 this.formDesignConfig.formBtns[1].badge =this.configEvents["item_" + val].length;
                             }else{
                                 this.formDesignConfig.formBtns[1].badge = 0;
+                            }
+                            if(this.configRules["item_"+ val]){
+                                this.formDesignConfig.formBtns[2].badge =this.configRules["item_" + val].length;
+                            }else{
+                                this.formDesignConfig.formBtns[2].badge = 0;
                             }
                             this.$refs.qwformDesign.clearValidate();
                         }, 0);
@@ -1178,7 +1243,10 @@ export default {
             this.configView=null;
             this.configitems=[];
             this.configEvents={};
+            this.configRules={};
             this.$set(this.formDesignConfig.items[0].dropDown,'data',[])
+            this.$set(this.formDesignConfig.formBtns[1],"badge",0);
+            this.$set(this.formDesignConfig.formBtns[2],"badge",0);
             let formSheme = this.$refs.formSheme;            
             if(formSheme){
                 formSheme.resetFields();
@@ -1277,7 +1345,7 @@ export default {
                             if(that.curDesignId){
                                 let params={
                                     id: that.curDesignId,
-                                    config: formatJson({configView:that.configView,configitems:that.configitems,configEvents:this.configEvents})
+                                    config: formatJson({configView:that.configView,configitems:that.configitems,configEvents:this.configEvents,configRules:this.configRules})
                                 }
                                 maintainDesignEdit({Vue:that,params:params}).then(res=>{
                                     that.$message.success("操作成功！");
@@ -1377,6 +1445,59 @@ export default {
         DialogEventCanceled(body){
             body.reset();
             this.DialogEvent.dialogVisible = false;
+        },
+        showDialogRules(){
+             if(!this.formDesignConfig.formData.field){
+                this.$message.error("请先选择指定的字段！");
+                return;
+            }
+            let field= null;
+            for(let item of this.checkItems){
+                if(item.id==this.formDesignConfig.formData.field){
+                    field= item;
+                    break;
+                }
+            }
+            if(!this.formDesignConfig.formData.control){
+                this.$message.error("请选择指定的控件！")
+                return;
+            }
+            let control = null;
+            for(let item of queryControls){
+                if(item.value==this.formDesignConfig.formData.control){
+                    control= item;
+                    break;
+                }
+            }
+            if(!field || (!control)){
+                console.error("未找到指定的字段或控件！");
+                return;
+            }
+            let rules = this.configRules["item_"+field.id];            
+            this.DialogRule.title = "验证规则管理/" + field.label +"/" + control.label;
+            this.$set(this.DialogRule,"dialogVisible",true);
+            if(rules){
+                let body = this.$refs.formRuleBody;
+                if(body){
+                    body.init(rules);
+                }
+                console.log("初始化规则表单！")
+            }
+        },
+        saveRule(rules){
+            let key = 'item_' + this.formDesignConfig.formData.field;
+            this.$set(this.configRules,key,JsonParse(formatJson(rules)))
+            this.$set(this.formDesignConfig.formBtns[2], "badge",this.configRules[key].length);
+            this.buildQueryFormConfig();            
+            let body = this.$refs.formRuleBody;
+                if(body){
+                    body.reset();
+                    this.$set(this.DialogRule,"dialogVisible",false);
+                }
+        },
+        closeDialogRule(data){
+            data.self.reset();
+            this.$set(this.DialogRule,"dialogVisible",false);
         }
     }
 }

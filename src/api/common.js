@@ -221,7 +221,7 @@ export const formatJson =(msg)=>{
     for (var i = 0; i < str.length; i++) {
         var text = str.charAt(i);
         if (rep == text)
-            jsonStr += "        "
+            jsonStr += "  "
         else {
             jsonStr += text;
         }

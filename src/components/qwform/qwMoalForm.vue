@@ -1,5 +1,5 @@
 <template>
-<div class="qwModalForm" @contextmenu="contextMenu">
+<div class="qwModalForm" ><!-- @contextmenu="contextMenu" 调试专用 -->
     <qwDialog :config=config.qwDialog>
         <slot name="title" 
             :style="config.titleStyle">

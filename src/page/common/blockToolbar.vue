@@ -4,6 +4,7 @@
                 <el-button-group class="qwToolGroup">
                     <el-button v-for="(item,i) in config.group.items" @click="leftGroupItemClick(item,i)" :key="i" :class="config.group.activeIndex==i?'active':''"> {{item.title}}  </el-button>
                 </el-button-group>
+                <slot name="left"></slot>
             </span>
             <span class="r">  
                 <el-button
@@ -14,7 +15,8 @@
                     :disabled="item.disabled"
                     :plain="true"
                     @click="rightGroupItemClick(item,i)"
-                >{{item.title}}</el-button> 
+                >{{item.title}}</el-button>
+                <slot name="right"></slot> 
             </span>
 </div>    
 </template>

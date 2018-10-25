@@ -45,7 +45,7 @@
 		 <el-button :type="scope.row.isAble?'primary':'danger'" size="mini" :plain="true">{{scope.row.isAble?'启用':'停用'}}</el-button>
 	</span>
 	<span v-else-if="item.type=='btnsTextWithMethod'">
-		 <el-button v-if="it.showFunc(scope.row)" type="text" v-for="(it,k) in item.fields" @click="callBack(it.method,scope.row,scope.$index)" size="mini" :key="k">{{it.name}}</el-button>
+		 <el-button v-if="undefined==it.showFunc || (it.showFunc(scope.row))" type="text" v-for="(it,k) in item.fields" @click="callBack(it.method,scope.row,scope.$index)" size="mini" :key="k">{{it.name}}</el-button>
 	</span>
 	
 	<!-- 盘点录入 -->

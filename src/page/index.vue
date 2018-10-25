@@ -45,7 +45,7 @@ var vueObj= {
       msg: 'Welcome to Your Vue.js App'
     }
   },
-  props:["appUrl", "userName", "userImg","companyName","companyEnglish","companyLogo"],
+  props:["appUrl","appName", "userName", "userImg","companyName","companyEnglish","companyLogo"],
   computed:{
     ...mapState({
         isShowSidebar: state => state.app.isShowSidebar,
@@ -57,7 +57,6 @@ var vueObj= {
     '$route' (to, from) {
         let box=that.$refs['mainBox'];  
         if(box){
-          console.log('done...')
             box.setAttribute('class','mainBox ani0');
             setTimeout(()=>{
                 box.setAttribute('class','mainBox');
@@ -66,12 +65,28 @@ var vueObj= {
     }
   },
   mounted(){
-    //this.$router.push({path:'/index2',params:{urlLink:'http://www.baidu.com'}})
-    //console.log(this.$store,this.isShowSidebar, this.$store.state.app.isShowSidebar);    
-    // this.setPorts(this.appUrl);
-    // console.log("this.appurl===>",this.appUrl);
     window.localStorage.setItem('ports',this.appUrl);
     var mainNav=[
+          {
+            id:13,
+            title:'百度',
+            link:'https://www.baidu.com'
+          },
+          {
+            id:14,
+            title:'腾讯',
+            link:'https://www.qq.com'
+          },
+          {
+            id:15,
+            title:"blog",
+            link:"https://blog.csdn.net/cmyh100/article/details/79388186"
+          },
+          {
+            id:100,
+            title:"实例",
+            link:"/desktop",
+          },
           {
             id: 1,
             title:'数据仓库',
@@ -107,12 +122,12 @@ var vueObj= {
                 link:'/dataAuthRole',
                 childrens:[]
               },              
-              // {                
-              //   id: 10,
-              //   title:'人员授权',
-              //   link:'/dataAuthPerson',
-              //   childrens:[]
-              // },              
+              {                
+                id: 10,
+                title:'人员查看',
+                link:'/dataAuthPerson',
+                childrens:[]
+              },              
               {                
                 id: 11,
                 title:'授权查询',
@@ -127,138 +142,44 @@ var vueObj= {
             link:'/dataInfo',
             childrens:[]
           },
-          // {
-          //   id: 4,
-          //   title:'对外接口',
-          //   link:'/data',
-          //   childrens:[              
-          //       {
-          //         id: 12,
-          //         title:'数据接口',
-          //         link:'/dataApi',
-          //         childrens:[]
-          //       },                
-          //       {
-          //         id: 13,
-          //         title:'权限接口',
-          //         link:'/dataAuthApi',
-          //         childrens:[]
-          //       },
-          //   ]
-          // },
+          
           {
             id: 5,
             title:'数据日志',
             link:'/dataLog',
             childrens:[]
           },
-          // {
-          //   id: 1,
-          //   title:'后台首页',
-          //   link:'/desktop'
-          // },
-          // {
-          //   id:2,
-          //   title:'系统设置',
-          //   opened: false,
-          //   childrens:[
-          //     {
-          //       id:4,
-          //       title:'菜单管理',
-          //       link:'/menu'
-          //     },
-          //     {
-          //       id:5,
-          //       title:'权限管理',
-          //       link:'/auth',
-          //       opened:true,
-          //       childrens:[
-          //         {
-          //           id:7,
-          //           title:'角色管理',
-          //           link:'/role',
-          //         },
-          //         {
-          //           id:8,
-          //           title:'权限节点',
-          //           link:'/nodes',
-          //         },  
-          //       ]
-          //     },
-          //     {
-          //       id:9,
-          //       title:'企业/部门管理',
-          //       link:'/depart'
-          //     },
-          //   ]
-          // },
-          // {
-          //   id:3,
-          //   title:'模板管理',
-          //   childrens:[
-          //     {
-          //       id:10,
-          //       title:'菜单管理',
-          //       link:'/menu'
-          //     },
-          //     {
-          //       id:11,
-          //       title:'权限管理',
-          //       link:'/auth'
-          //     },
-          //     {
-          //       id:12,
-          //       title:'企业/部门管理',
-          //       link:'/depart'
-          //     },
-          //   ]
-          // },        
-          // {
-          //   id:13,
-          //   title:'百度',
-          //   link:'https://www.baidu.com'
-          // },
-          // {
-          //   id:14,
-          //   title:'腾讯',
-          //   link:'https://www.qq.com'
-          // },
-          // {
-          //   id:15,
-          //   title:"blog",
-          //   link:"https://blog.csdn.net/cmyh100/article/details/79388186"
-          // }
+         
       ]
       this.SET_SIDE_MENUS(mainNav)
       this.getFirst(mainNav[0]);
-    /*this.setUserImg(this.userImg);
-    this.setUserName(this.userName);
-    this.setCompanyName(this.companyName);
-    this.setCompanyEnglish(this.companyEnglish);
-    this.setCompanyLogo(this.companyLogo);*/
-    // this.$router.push({path:'index'})
-    // getList({empNo:1,barCode:'',qrcode:'11'},this).then(res=>{
-    //   console.log(res)
-    // })
-    this.setSize();
-    window.onresize=()=>{
-        this.setSize();
-    }
+      this.init();
+      this.setSize();
+      window.onresize=()=>{
+          this.setSize();
+      }
   },
   created(){
       that=this;
   },
   methods:{
-    ...mapMutations(["ADD_TAG","setUserImg", "setUserName",'setCompanyName','setCompanyEnglish','setCompanyLogo','setPorts','SET_IFRAMELINK','SET_SIDEBARHIEGHT','SET_SIDE_MENUS']),
+    ...mapMutations(["ADD_TAG","SET_APP_NAME","SET_USER_IMG", "SET_USER_NAME",'SET_COMPANY_NAME','SET_COMPANY_ENGLISH','setCompanyLogo','setPorts','SET_IFRAMELINK','SET_SIDEBARHIEGHT','SET_SIDE_MENUS']),
+    init(){
+      this.SET_COMPANY_NAME(this.companyName);
+      this.SET_APP_NAME(this.appName);
+      this.SET_COMPANY_ENGLISH(this.companyEnglish);
+      this.SET_USER_NAME(this.userName);
+      this.SET_USER_IMG(this.userImg);
+
+      console.log("companyName",this.setCompanyName);
+    },
     tagsActiveIndexChanged(tag){
         if(/http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/.test(tag.link)){
-            //if(this.$route.path!='/index2'){
               this.SET_IFRAMELINK(tag.link);
-              this.$router.push({path:'/index2',params:{urlLink:tag.link}})
+              this.$router.push({path:'/iframeLink',params:{urlLink:tag.link}})
         }else{
           this.$router.push({path:tag.link});
         }
-        //console.log("tagsActiveIndexChanged==>",tag.link); -->
     },
     //递归找到首先应该触发的页面
     getFirst(menu){

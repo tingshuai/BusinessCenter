@@ -32,5 +32,8 @@ export default vueObj;
 .qf{
   color:red;
 }
+.zengy{
+  width: 12px;
+}
 </style>
 

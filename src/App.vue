@@ -34,6 +34,7 @@ export default vueObj;
 }
 .zengy{
   width: 12px;
+  font: fantasy;
 }
 </style>
 

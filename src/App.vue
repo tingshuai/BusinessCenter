@@ -29,5 +29,8 @@ export default vueObj;
   width: 100%;
   height: auto;
 }
+.qf{
+  color:red;
+}
 </style>
 

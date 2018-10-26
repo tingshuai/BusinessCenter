@@ -37,4 +37,3 @@ export default vueObj;
   width: 12px;
 }
 </style>
-

@@ -5,7 +5,6 @@
 </template>
 <script>
 import qwForm from "components/qwform/qwform.vue"
-import {timestampToTime} from "../../dataModel/filter.js"
 import authDialogBody from "./authDialogBody.vue"
 import {mapState} from "vuex"
 import {

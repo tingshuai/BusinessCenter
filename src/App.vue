@@ -31,6 +31,7 @@ export default vueObj;
 }
 .qf{
   color:red;
+  font-size: 33px;
 }
 .zengy{
   width: 12px;

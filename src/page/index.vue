@@ -11,17 +11,17 @@
     </div>
   <!-- header -->
   <qwHead></qwHead>  
-    <div class="content">
-       <div class="left" :style="{width:sideBarWidth+'px',height: sideBarHeight+'px',left: (isShowSidebar==true? 0 : -1* sideBarWidth +'px') }">
-          <sideMenu></sideMenu>
-       </div>
-       <div class="main" :style="{height: sideBarHeight+'px',paddingLeft: (isShowSidebar? parseInt(sideBarWidth)+'px': '0')}">
-            <tags @activeIndexChanged="tagsActiveIndexChanged" />
-            <transition name="fade-transverse">
-              <router-view :style="{height: (sideBarHeight-48) + 'px',background:'rgba(240,242,245,1)',overflowY:'scroll',boxSizing:'border-box',padding:'24px 24px 0'}"></router-view> 
-            </transition>  
-       </div>
-    </div>    
+  <div class="content">
+     <div class="left" :style="{width:sideBarWidth+'px',height: sideBarHeight+'px',left: (isShowSidebar==true? 0 : -1* sideBarWidth +'px') }">
+        <sideMenu></sideMenu>
+     </div>
+     <div class="main" :style="{height: sideBarHeight+'px',paddingLeft: (isShowSidebar? parseInt(sideBarWidth)+'px': '0')}">
+          <tags @activeIndexChanged="tagsActiveIndexChanged" />
+          <transition name="fade-transverse">
+            <router-view :style="{height: (sideBarHeight-48) + 'px',background:'rgba(240,242,245,1)',overflowY:'scroll',boxSizing:'border-box',padding:'24px 24px 0'}"></router-view> 
+          </transition>  
+     </div>
+  </div>
   </div>
 </template>
 <script>
@@ -68,88 +68,154 @@ var vueObj= {
     window.localStorage.setItem('ports',this.appUrl);
     var mainNav=[
           {
-            id:13,
-            title:'百度',
-            link:'https://www.baidu.com'
-          },
-          {
-            id:14,
-            title:'腾讯',
-            link:'https://www.qq.com'
-          },
-          {
-            id:15,
-            title:"blog",
-            link:"https://blog.csdn.net/cmyh100/article/details/79388186"
-          },
-          {
-            id:100,
-            title:"实例",
-            link:"/desktop",
-          },
-          {
-            id: 1,
-            title:'数据仓库',
-            link:'/dataCenter',
+            id:1,
+            title:'产品管理',
+            link:'',
             childrens:[
               {
-                id: 6,
-                title:'数据建模',
-                link:'/dataModel',
+                id: 11,
+                title:'经营产品',
+                link:'/operatingProduct',
                 childrens:[]
               },              
               {
-                id: 7,
-                title:'数据结构',
-                link:'/dataStruct'
+                id: 12,
+                title:'单位组',
+                link:'/unitGroup'
+              },
+              {
+                id: 13,
+                title:'产品档案',
+                link:'',
+                childrens:[
+                  {
+                    id: 131,
+                    title:'产品维护',
+                    link:'/productMaintenance'
+                  },
+                  {
+                    id: 132,
+                    title:'产品规格',
+                    link:'/productSpecification'
+                  },
+                  {
+                    id: 133,
+                    title:'产品介绍',
+                    link:'/productIntroduction'
+                  }
+                ]
+              },
+              {
+                id: 14,
+                title:'产品调价',
+                link:'',
+                childrens:[
+                  {
+                    id: 141,
+                    title:'调价维护',
+                    link:'/priceAdjustmentMaintenance'
+                  }
+                ]
+              },
+              {
+                id: 15,
+                title:'产品发布',
+                link:'',
+                childrens:[
+                  {
+                    id: 151,
+                    title:'查看',
+                    link:'/see'
+                  },
+                  {
+                    id: 152,
+                    title:'发布记录',
+                    link:'/releaseRecords'
+                  }
+                ]
               }
             ]
           },
           {
-            id: 2,
-            title:'数据授权',
-            link:'/dataAuth',
+            id:2,
+            title:'资源管理',
+            link:'',
             childrens:[
-              {                
-                id: 8,
-                title:'授权策略',
-                link:'/dataAuthMehod',
-                childrens:[]
-              },              
-              {                
-                id: 9,
-                title:'角色授权',
-                link:'/dataAuthRole',
-                childrens:[]
-              },              
-              {                
-                id: 10,
-                title:'人员查看',
-                link:'/dataAuthPerson',
-                childrens:[]
-              },              
-              {                
-                id: 11,
-                title:'授权查询',
-                link:'/dataAuthQuery',
-                childrens:[]
+              {
+                id: 21,
+                title:'文件资源',
+                link:'/documentResources'
               },
+              {
+                id: 22,
+                title:'云应用',
+                link:'',
+                childrens:[
+                  {
+                    id: 221,
+                    title:'新增应用',
+                    link:'/newApplication'
+                  }
+                ]
+              },
+              {
+                id: 23,
+                title:'API接口',
+                link:'',
+                childrens:[
+                  {
+                    id: 231,
+                    title:'新增API',
+                    link:'/newApi'
+                  }
+                ]
+              },
+              {
+                id: 24,
+                title:'设备模型',
+                link:'/equipmentModel'
+              }
             ]
           },
           {
-            id: 3,
-            title:'数据运维',
-            link:'/dataInfo',
-            childrens:[]
-          },
-          
-          {
-            id: 5,
-            title:'数据日志',
-            link:'/dataLog',
-            childrens:[]
-          },
-         
+            id:3,
+            title:"经营管理",
+            link:"",
+            childrens:[
+              {
+                id: 31,
+                title:'订单管理',
+                link:'/orderManagement'
+              },
+              {
+                id: 32,
+                title:'应收款管理',
+                link:'/accountReceivable'
+              },
+              {
+                id: 33,
+                title:'收发货管理',
+                link:'/collectionDeliveryManagement'
+              },                                    
+              {
+                id: 34,
+                title:'发票管理',
+                link:'',
+                childrens:[
+                  {
+                    id: 341,
+                    title:'开具发票',
+                    link:'/invoice'
+                  }     
+                ]
+              },
+              {
+                id: 35,
+                title:'进出账管理',
+                link:'/importAndExportAccountManagement'
+              }                       
+            ]               
+          }
       ]
       this.SET_SIDE_MENUS(mainNav)
       this.getFirst(mainNav[0]);

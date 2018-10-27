@@ -12,7 +12,8 @@ export default {
             axios.get((noPocPort? url : (this.getPocPort() + url)), {
                 params
             }).then(res => {
-                if (res.data.result) {
+                // debugger;
+                if (res.data.code) {
                     resolve(res.data)
                 } else {
                     if (data.Vue) {
@@ -54,7 +55,7 @@ export default {
         let params = data.params ? this.setParams(data.params) : {};
         return new Promise((resolve, reject) => {
             axios.post((noPocPort? url : (this.getPocPort() + url)), params).then(res => {
-                if (res.data.result) {
+                if (res.data.code) {
                     resolve(res.data)
                 } else {
                     if (data.Vue) {

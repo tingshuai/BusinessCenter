@@ -11,6 +11,7 @@ export default {
       axios.get(this.getPocPort() + url, {
         params
       }).then(res => {
+        debugger;
         if (res.data.result) {
           resolve(res.data)
         } else {
@@ -20,6 +21,7 @@ export default {
           }
         }
       }).catch(error => {
+        debugger;
         if (data.Vue) {
           data.Vue.$message.error('系统异常');
         }
@@ -30,6 +32,7 @@ export default {
   fetchQuickSearch(url,Vue) {
     return new Promise((resolve, reject) => {
       axios.get(this.getPocPort() + url).then(res => {
+        debugger;
         if (res.data.result) {
           resolve(res.data)
         } else {
@@ -39,6 +42,7 @@ export default {
           reject(res)
         }
       }).catch(error => {
+        debugger;
         if (Vue) {
             Vue.$message.error('系统异常');
         }
@@ -50,6 +54,7 @@ export default {
     let params = data.params ? this.setParams(data.params) : {};
     return new Promise((resolve, reject) => {
       axios.post(this.getPocPort() + url, params).then(res => {
+        debugger;
         //console.log(typeof res.data)
         if (res.data.result) {
           resolve(res.data)
@@ -60,6 +65,7 @@ export default {
           reject(res)
         }
       }).catch(error => {
+        debugger;
         if (data.Vue) {
           data.Vue.$message.error('系统异常');
         }
@@ -70,6 +76,7 @@ export default {
   fetchPostJson(url, data={}) {
     return new Promise((resolve, reject) => {
       axios.post(this.getPocPort() + url, data.params).then(res => {
+        debugger;
         if (res.data.result) {
           resolve(res.data)
         } else {
@@ -79,6 +86,7 @@ export default {
           reject(res);
         }
       }).catch(error => {
+        debugger;
         if (data.Vue) {
           data.Vue.$message.error('系统异常');
         }

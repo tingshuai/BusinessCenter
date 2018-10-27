@@ -204,6 +204,7 @@ export default {
                                 ],
                                 eventCB:{//回调事件
                                     formBtnClicked:(data)=>{
+                                        debugger;
                                         console.log("done2",data);
                                         if(data.index==0){
                                             data.self.validate(()=>{
@@ -215,6 +216,7 @@ export default {
                                                         treeNamePath:data.config.formData.treeNamePath
                                                     }
                                                 warehouseAdd({Vue:this,params:params}).then(res=>{
+                                                    debugger;
                                                     if(res.result){
                                                         this.loadTree(this.config.curNode,this.config.curNode.data);
                                                         this.closeTreeModal();

@@ -28,6 +28,5 @@ export default vueObj;
   box-sizing: border-box;
   width: 100%;
   height: auto;
-  color:red;
 }
 </style>

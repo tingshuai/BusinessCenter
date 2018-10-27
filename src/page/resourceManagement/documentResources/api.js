@@ -1,7 +1,8 @@
 import http from "api/base.js"
 
-export let warehouseList = (data, self) => {
-    return http.fetchPost('/warehouse/list', data, self)
+export let treestructure = (data, self) => {  //点击标题父级文件夹
+    // debugger;
+    return http.fetchGet('/folders/parents', data, self)
 }
 
 export let warehouseGrid = (data, self) => {
@@ -20,10 +21,6 @@ export let warehouseAble = (data, self) => {
 }
 export let warehouseDel = (data, self) => {
     return http.fetchPost('/warehouse/del', data, self)
-}
-
-export let dataModelList = (data, self) => {
-    return http.fetchPost('/datamodel/list', data, self)
 }
 
 export let dataModelGrid = (data, self) => {
@@ -235,12 +232,14 @@ export let datamodelListByWareHouse = (data, self) => {
 export let permissionRoleListOrg = (data, self) => {
     return http.fetchPost("/permissionRole/listOrg", data, self)
 }
+
 /*
-部门人员查询 穿orgId
+查询文件列表
 */
-export let permissionRolePageUserPermission = (data, self) => {
-    return http.fetchPost("/permissionRole/pageUserPermission", data, self)
+export let queryFileList = (data, self) => {
+    return http.fetchGet("/files", data, self)
 }
+
 export let permissionRoleListUser = (data, self) => {
     return http.fetchPost("/permissionRole/listUser", data, self)
 }

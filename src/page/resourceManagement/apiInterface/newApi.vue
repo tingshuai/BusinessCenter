@@ -1,4 +1,4 @@
-//云应用
+//API接口
 <template>
 	<div class="market-mgr">
 		<classified-search :config="classifiedConfig" :selected="selectedItems" @doSelectHandler="doClickHandler" />
@@ -10,14 +10,14 @@
 					<el-radio-button label="已停用">只显示停用</el-radio-button>
 				</el-radio-group>
                 <span>
-                    <el-input size="small" style="width: 150px;" v-model="queryParam.province" placeholder="应用名称搜索..."></el-input>
+                    <el-input size="small" style="width: 150px;" v-model="queryParam.province" placeholder="接口名称搜索..."></el-input>
                     <el-button size="small" style="width: 80px;" type="primary">查询</el-button>
                     <el-button size="small" style="width: 100px;">清空条件</el-button>
                  </span>
 			</span>
             
 			<span slot="right">
-				<el-button icon="el-icon-plus" size="small" style="width: 100px;" type="primary" v-show="!editModel" @click="doAdd">新增应用</el-button>
+				<el-button icon="el-icon-plus" size="small" style="width: 100px;" type="primary" v-show="!editModel" @click="doAdd">新增API</el-button>
 				<el-button icon="el-icon-edit" size="small" style="width: 80px;" :disabled="marketForm==null||marketForm.isAble=='已启用'" v-show="!editModel" @click="editModel = true;">编辑</el-button>
 				<el-button icon="el-icon-delete" size="small" style="width: 80px;" :disabled="marketForm==null||marketForm.isAble=='已启用'"
 				   v-show="!editModel" @click="doDelete">删除</el-button>
@@ -38,13 +38,15 @@
 						<el-tag size="medium" :type="scope.row.authType=='已认证'?'success':scope.row.authType=='待认证'?'warning':scope.row.authType=='认证失败'?'danger':'info'">{{ scope.row.authType }}</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column resizable show-overflow-tooltip property="province" align="center" label="应用分类" width="120" />
+				<el-table-column resizable show-overflow-tooltip property="province" align="center" label="接口分类" width="120" />
 				<el-table-column resizable show-overflow-tooltip property="city" align="center" label="行业领域" width="120" />
-				<el-table-column resizable show-overflow-tooltip property="certificationType" align="center" label="应用编码" width="100" />
-				<el-table-column resizable show-overflow-tooltip property="userName" align="center" label="应用名称" width="150" />
-				<el-table-column resizable show-overflow-tooltip property="userName" align="center" label="版本号" />
-				<el-table-column resizable show-overflow-tooltip property="companyLinkman" align="center" label="支持云存储" width="120" />
-				<el-table-column resizable show-overflow-tooltip property="companyLinkphone" align="center" label="支持短信" width="120" />
+				<el-table-column resizable show-overflow-tooltip property="certificationType" align="center" label="应用专属" width="100" />
+				<el-table-column resizable show-overflow-tooltip property="userName" align="center" label="接口编码" width="150" />
+				<el-table-column resizable show-overflow-tooltip property="userName" align="center" label="接口名称" />
+				<el-table-column resizable show-overflow-tooltip property="companyLinkman" align="center" label="版本号" width="120" />
+				<el-table-column resizable show-overflow-tooltip property="companyLinkphone" align="center" label="接口地址" width="120" />
+				<el-table-column resizable show-overflow-tooltip property="authDate" align="center" label="可见设置" width="120" />
+
 				<el-table-column label="操作" align="center" width="200">
 					<template slot-scope="scope">
 						<el-button size="mini" type="primary" :disabled="scope.row.authType!='待认证'" @click="doAudit(scope.row)">认证审核</el-button>
@@ -77,10 +79,13 @@
 				},
 				//筛选数据
 				classifiedConfig: [{
-					title: '应用分类:',
+					title: '接口分类:',
 					options: []
 				},{
 					title: '行业领域:',
+					options: []
+				},{
+					title: '应用专属:',
 					options: []
 				}],
 				selectedItems: [{

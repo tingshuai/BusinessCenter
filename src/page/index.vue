@@ -137,7 +137,7 @@ var vueObj= {
             ]
           },
           {
-              id: 1,
+              id: 2,
               title:'资源管理',
               link:'/dataCenter',
               childrens:[

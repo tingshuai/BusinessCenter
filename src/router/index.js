@@ -10,7 +10,7 @@ import priceAdjustmentMaintenance from 'page/productManagement/productPriceAdjus
 import releaseRecords from 'page/productManagement/productRelease/releaseRecords/releaseRecords.vue';//发布记录
 import see from 'page/productManagement/productRelease/see/see.vue';//查看
 import documentResources from 'page/resourceManagement/documentResources/documentResources.vue';//文件资源
-import newApplication from 'page/resourceManagement/cloudApplication/newApplication/newApplication.vue';//新增应用
+import newApplication from 'page/resourceManagement/cloudApplication/newApplication.vue';//云应用
 import newApi from 'page/resourceManagement/apiInterface/newApi/newApi.vue';//新增应用
 import equipmentModel from 'page/resourceManagement/equipmentModel/equipmentModel.vue';//文件资源
 import accountReceivable from 'page/management/accountReceivable/accountReceivable.vue';//应收款管理...
@@ -71,7 +71,7 @@ export default new Router({
 			name: 'documentResources',
 			component: documentResources
 		},
-		{
+		{  //云应用
 			path: '/newApplication',
 			name: 'newApplication',
 			component: newApplication

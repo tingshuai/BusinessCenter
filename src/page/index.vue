@@ -137,45 +137,32 @@ var vueObj= {
             ]
           },
           {
-            id:2,
-            title:'资源管理',
-            link:'',
-            childrens:[
-              {
-                id: 21,
-                title:'文件资源',
-                link:'/documentResources'
-              },
-              {
-                id: 22,
-                title:'云应用',
-                link:'',
-                childrens:[
-                  {
-                    id: 221,
-                    title:'新增应用',
-                    link:'/newApplication'
-                  }
-                ]
-              },
-              {
-                id: 23,
-                title:'API接口',
-                link:'',
-                childrens:[
-                  {
-                    id: 231,
-                    title:'新增API',
-                    link:'/newApi'
-                  }
-                ]
-              },
-              {
-                id: 24,
-                title:'设备模型',
-                link:'/equipmentModel'
-              }
-            ]
+              id: 2,
+              title:'资源管理',
+              link:'/dataCenter',
+              childrens:[
+                {
+                  id: 6,
+                  title:'文件资源',
+                  link:'/documentResources',
+                  childrens:[]
+                },              
+                {
+                  id: 7,
+                  title:'云应用',
+                  link:'/cloudApplication'
+                },
+                {
+                  id: 8,
+                  title:'API接口',
+                  link:'/apiInterface'
+                },
+                {
+                  id: 9,
+                  title:'设备模型',
+                  link:'/equipmentModel'
+                }
+              ]
           },
           {
             id:3,

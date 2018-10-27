@@ -4,8 +4,8 @@
 		<img src="../../assets/img/logo_icon.png" alt="logo" class="logo_icon">
 	</div>
 	<div class="r">
-		<h1 class="app_name">{{appName}}</h1>
-		<p class="cp_name"> {{companyName}} </p>
+		<h1 class="app_name">数据中心</h1>
+		<p class="cp_name">飞戎机器人科技有限公司</p>
 	</div>
 	<!-- <h1 style="line-height:60px;background:#FFF;color:#06F;padding-left:10px;">QWADMIN</h1> -->
 </div>	
@@ -15,8 +15,7 @@ import {mapState} from 'vuex'
 let qwLogo={
 	computed:{
 		...mapState({
-			companyName: state => state.app.companyName,
-			appName: state => state.app.appName
+
 		})
 	}
 }

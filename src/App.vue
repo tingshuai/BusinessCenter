@@ -30,4 +30,3 @@ export default vueObj;
   height: auto;
 }
 </style>
-

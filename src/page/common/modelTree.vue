@@ -51,9 +51,9 @@
 </div> 
 </template>
 <script>
-import qwForm from "../../components/qwform/qwform.vue"
-import qwModalForm from "../../components/qwform/qwMoalForm.vue"
-import {timestampToTime} from "../dataModel/filter.js"
+import qwForm from "components/qwform/qwform.vue"
+import qwModalForm from "components/qwform/qwMoalForm.vue"
+import {timestampToTime} from "common/dataModel/filter.js"
 import {mapState} from "vuex"
 import {
     warehouseList,
@@ -76,7 +76,7 @@ import {
     versionAdd,
     versionDel,
 
-} from '../dataModel/api.js';
+} from 'common/dataModel/api.js';
 export default {
     components:{
         qwModalForm

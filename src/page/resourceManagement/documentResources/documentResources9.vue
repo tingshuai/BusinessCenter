@@ -1,6 +1,6 @@
 <template>
 <div class="qwCommonPage">
-    新增应用
+    文件资源
 </div>
 </template>
 <script>
@@ -10,7 +10,7 @@ import {mapState} from "vuex"
 import {
     warehouseList,
 } from './api.js';
-export default {
+export default { 
     components:{
         qwForm,
     },

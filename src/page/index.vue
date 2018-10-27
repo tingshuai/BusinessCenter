@@ -77,7 +77,7 @@ var vueObj= {
                 title:'经营产品',
                 link:'/operatingProduct',
                 childrens:[]
-              },
+              },              
               {
                 id: 12,
                 title:'单位组',

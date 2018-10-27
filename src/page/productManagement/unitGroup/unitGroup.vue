@@ -1,12 +1,10 @@
 <template>
-<div class="qfPage pageContent">
+<div class="qwCommonPage">
     产品组
-    <qfTable></qfTable>
 </div>
 </template>
 <script>
 import qwForm from "components/qwform/qwform.vue"
-import qfTable from "components/qfCommon/table.vue"
 import authDialogBody from "./authDialogBody.vue"
 import {mapState} from "vuex"
 import {
@@ -15,7 +13,6 @@ import {
 export default {
     components:{
         qwForm,
-        qfTable
     },
     computed:{
         ...mapState({

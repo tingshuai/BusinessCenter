@@ -66,7 +66,7 @@ export default new Router({
 			name: 'see',
 			component: see
 		},
-		{
+		{  //文件资源
 			path: '/documentResources',
 			name: 'documentResources',
 			component: documentResources

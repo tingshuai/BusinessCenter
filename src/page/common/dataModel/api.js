@@ -1,4 +1,4 @@
-import http from "../../api/base.js"
+import http from "api/base.js"
 
 export let warehouseList = (data, self) => {
     return http.fetchPost('/warehouse/list', data, self)

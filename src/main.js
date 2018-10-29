@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import app from './App.vue'
 import 'element-ui/lib/theme-chalk/index.css'
+import 'element-ui/lib/theme-chalk/display.css';
 import Element from 'element-ui'
 import ajax from './api/base.js'
 import router from './router/index.js'

@@ -1,4 +1,4 @@
-//云应用
+//云应用    ...
 <template>
 	<div class="market-mgr">
 		<classified-search :config="classifiedConfig" :selected="selectedItems" @doSelectHandler="doClickHandler" />

@@ -4,51 +4,46 @@
 		<classified-search :config="classifiedConfig" :selected="selectedItems" @doSelectHandler="doClickHandler" />
 		<toolbars class="custom-toolbar">
 			<span slot="left">
-				<el-radio-group size="small" v-model="queryParam.isAble" @change="doSearch">
+				<el-radio-group size="small" v-model="queryParam.isAble" @change="cloudApplication">
 					<el-radio-button label="">全部</el-radio-button>
-					<el-radio-button label="已启用">只显示启用</el-radio-button>
-					<el-radio-button label="已停用">只显示停用</el-radio-button>
+					<el-radio-button label="T">只显示启用</el-radio-button>
+					<el-radio-button label="F">只显示停用</el-radio-button>
 				</el-radio-group>
                 <span>
-                    <el-input size="small" style="width: 150px;" v-model="queryParam.province" placeholder="应用名称搜索..."></el-input>
-                    <el-button size="small" style="width: 80px;" type="primary">查询</el-button>
-                    <el-button size="small" style="width: 100px;">清空条件</el-button>
+                    <el-input size="small" style="width: 150px;" v-model="queryParam.appName" placeholder="应用名称搜索..."></el-input>
+                    <el-button size="small" style="width: 80px;" type="primary" @click="cloudApplication">查询</el-button>
+                    <el-button size="small" style="width: 100px;" @click="empty()">清空条件</el-button>
                  </span>
 			</span>
-            
+
 			<span slot="right">
-				<el-button icon="el-icon-plus" size="small" style="width: 100px;" type="primary" v-show="!editModel" @click="doAdd">新增应用</el-button>
-				<el-button icon="el-icon-edit" size="small" style="width: 80px;" :disabled="marketForm==null||marketForm.isAble=='已启用'" v-show="!editModel" @click="editModel = true;">编辑</el-button>
-				<el-button icon="el-icon-delete" size="small" style="width: 80px;" :disabled="marketForm==null||marketForm.isAble=='已启用'"
-				   v-show="!editModel" @click="doDelete">删除</el-button>
-				<el-button icon="el-icon-setting" size="small" style="width: 80px;" :disabled="marketForm==null" v-show="!editModel" @click="doAbleOrDisable(marketForm.isAble==null?'启/停用':marketForm.isAble=='已停用'?'启用':'停用')">
-					{{marketForm.isAble==null?'启/停用':marketForm.isAble=='已停用'?'启用':'停用'}}
-				</el-button>
-				<el-button icon="el-icon-success" size="small" style="width: 80px;" type="primary" v-show="editModel" @click="doSave">保存</el-button>
-				<el-button icon="el-icon-back" size="small" style="width: 80px;" type="danger" v-show="editModel" @click="editModel=false;">返回</el-button>
+				<el-button icon="el-icon-plus" size="small" style="width: 100px;" type="primary" @click="doAdd">新增应用</el-button>
+				<el-button icon="el-icon-delete" size="small" style="width: 100px;" @click="batchDeleting()">批量删除</el-button>
+				<el-button icon="el-icon-setting" size="small" style="width: 100px;" @click="doAbleOrDisable()">批量启停</el-button>
 			</span>
 		</toolbars>
 
         <div>
 			<el-table height="600" border stripe ref="table" :data="tableData" style="width: 100%" @selection-change="tableSelectChanged"
-			    @row-dblclick="doView" @row-click="tableRowClick">
+			    @row-dblclick="remove" @row-click="tableRowClick">
 				<el-table-column type="selection" width="55" />
 				<el-table-column resizable show-overflow-tooltip property="authType" align="center" label="选择" width="120">
 					<template slot-scope="scope">
 						<el-tag size="medium" :type="scope.row.authType=='已认证'?'success':scope.row.authType=='待认证'?'warning':scope.row.authType=='认证失败'?'danger':'info'">{{ scope.row.authType }}</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column resizable show-overflow-tooltip property="province" align="center" label="应用分类" width="120" />
-				<el-table-column resizable show-overflow-tooltip property="city" align="center" label="行业领域" width="120" />
-				<el-table-column resizable show-overflow-tooltip property="certificationType" align="center" label="应用编码" width="100" />
-				<el-table-column resizable show-overflow-tooltip property="userName" align="center" label="应用名称" width="150" />
-				<el-table-column resizable show-overflow-tooltip property="userName" align="center" label="版本号" />
-				<el-table-column resizable show-overflow-tooltip property="companyLinkman" align="center" label="支持云存储" width="120" />
-				<el-table-column resizable show-overflow-tooltip property="companyLinkphone" align="center" label="支持短信" width="120" />
-				<el-table-column label="操作" align="center" width="200">
+				<el-table-column resizable show-overflow-tooltip property="alias" align="center" label="应用分类" width="120" />
+				<el-table-column resizable show-overflow-tooltip property="authUrl" align="center" label="行业领域" width="120" />
+				<el-table-column resizable show-overflow-tooltip property="spaceSize" align="center" label="应用编码" width="120" />
+				<el-table-column resizable show-overflow-tooltip property="releaseUrl" align="center" label="应用名称" width="120" />
+				<el-table-column resizable show-overflow-tooltip property="version" align="center" label="版本号" />
+				<el-table-column resizable show-overflow-tooltip property="type" align="center" label="支持云存储" width="120" />
+				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="支持短信" width="120" />
+				<el-table-column label="操作" align="center" width="300">
 					<template slot-scope="scope">
-						<el-button size="mini" type="primary" :disabled="scope.row.authType!='待认证'" @click="doAudit(scope.row)">认证审核</el-button>
-						<el-button size="mini" type="danger" @click="doView(scope.row)">查看</el-button>
+						<el-button size="mini" type="primary" @click="edit(scope.row)">编辑</el-button>
+						<el-button size="mini" type="danger" @click="remove(scope.row)">删除</el-button>
+						<el-button size="mini" type="danger" @click="enableDiscontinuation(scope.row)">启用</el-button>
 					</template>
 				</el-table-column>
 				</el-table-column>
@@ -57,28 +52,55 @@
 				<page-tool @doSearch="doSearch" :pageParam="page"></page-tool>
 			</div>
 		</div>
+		<!-- 弹窗 -->
+		<my-toast :config="toastAddData" @doSave="doSave" @close="close">
+		    <toast-body ref='toastBodys'></toast-body>
+		</my-toast>
 	</div>
 </template>
 <script>
 	import {
-		marketList,
+		marketList, //获取标签
+		cloudCompanyList, //获取云应用列表
+		newCloudApplication, //新增云应用
+		batchDeleting, //批量删除云应用
+		BatchStartAndStopCloudApplication, //批量启停云应用
 		saveOrUpdateMarket,
 		deletMarket,
 		ableOrDisableMarket
 	} from "./api.js"
+	import toastBody from './toastBody' //弹窗
 	export default {
 		components: {
+			toastBody,
 		},
 		data() {
 			return {
-				editModel: false,
+				saveType:'', //类型
+				toastAddData: {
+					title: "新增应用", //弹窗标题
+					dialogVisible: false, //弹窗显示
+					width: "1000px", //弹窗宽
+					btnData: [{
+					name: '保存', //按钮名
+					method: 'doSave', //回调函数
+					bgColor: 'dialog-bule' //按钮背景
+					}, {
+					name: '取消', //按钮名
+					method: 'close' //回调函数
+					}]
+				},
 				queryParam: {
-					isAble: ''
+					isAble: '', //启停标识
+					appName:'',  //应用名称
+					appType: '', //应用分类
+					industry: '', //行业领域
 				},
 				//筛选数据
 				classifiedConfig: [{
 					title: '应用分类:',
-					options: []
+					options: [
+					]
 				},{
 					title: '行业领域:',
 					options: []
@@ -86,13 +108,17 @@
 				selectedItems: [{
 					value: '',
 					expanded: false
+				},{
+					value: '',
+					expanded: false
 				}],
 				marketForm: {
 
                 },
-                //列表
-                currSelItem: null,
+				//列表
 				selItemArr: [],
+                currSelItem: null,
+				industryField: null, //行业领域
 
 				isBatch: false,
 				queryParam: {
@@ -103,106 +129,214 @@
 					pageSize: 10,
 					total: 0
 				},
-				tableData: []
+				tableData: [], //表格
+			
 			}
 		},
 		methods: {
-			doAdd() {
-				this.marketForm = {
-					isAble: "已停用"
-				}
-				this.editModel = true;
+			close() { //取消
+				this.toastAddData.dialogVisible = false;
+            },
+			doAdd() { //新增应用
+				this.toastAddData.dialogVisible = true;
+				this.saveType = '新增';
 			},
-			doDelete() {
-				this.$confirm('您确认删除市场, 是否继续?', '系统提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
+			remove(row) {  //删除
+                let apiId = [row.id];
+				this.$confirm("确定删除?", "提示", {
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					type: "warning"
 				}).then(() => {
-					deletMarket({
+					batchDeleting({
 						Vue: this,
 						params: {
-							marketId: this.marketForm.id
-						},
-					}).then(res => {
-						if (res.result) {
-							this.doSearch();
+							apiId,
 						}
-					})
-
+					}).then(data => {
+					this.$message({
+						message: "删除成功！",
+						type: "success",
+					});
+						this.cloudApplication(); //刷新数据
+					});
+				})
+				.catch(() => {
+					this.$message({
+					type: "info",
+					message: "已取消删除"
+					});
 				});
 			},
-			doAbleOrDisable(opName) {
-				this.$confirm('您确认' + opName + '市场, 是否继续?', '系统提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
+			batchDeleting() {  //批量删除
+				let len = this.$refs.table.selection.length - 1;
+				let apiId = '';
+				//判断删除的size是否等于当前页的数量
+				this.$refs.table.selection.forEach((item, index) => {    
+					apiId = apiId += len === index ? item.id : item.id + ",";
+					apiId = apiId.split(',')
+				});
+				let flag = this.tableData.length === this.$refs.table.selection.length;
+				this.$confirm("确定删除?", "提示", {
+				confirmButtonText: "确定",
+				cancelButtonText: "取消",
+				type: "warning"
 				}).then(() => {
-					ableOrDisableMarket({
+					batchDeleting({
 						Vue: this,
 						params: {
-							marketId: this.marketForm.id
-						},
-					}).then(res => {
-						if (res.result) {
-							this.doSearch();
+							apiId,
 						}
-					})
-
-				});
-			},
-			doSave() {
-				this.$refs['marketForm'].validate((valid) => {
-					if (valid) {
-						saveOrUpdateMarket({
-							Vue: this,
-							params: this.marketForm,
-						}).then(res => {
-							if (res.result) {
-								this.editModel = fasle;
-								this.doSearch();
-							}
-						})
+					}).then(data => {
+						this.$message({
+						message: "删除成功！",
+						type: "success"
+					});
+					//回到上一页
+					if (flag) {
+						debugger;
+						this.$refs.table.selection.pageNo +=
+						this.$refs.table.selection - 1 >= 1 ? -1 : 0;
 					}
+					    this.cloudApplication(); //刷新数据
+					});
+				})
+				.catch(() => {
+					this.$message({
+					type: "info",
+					message: "已取消删除"
+					});
 				});
 			},
-			doClickHandler(index, option) {
-				this.marketForm = { ...option
-				};
-				delete this.marketForm.label;
-				delete this.marketForm.value;
-				delete this.marketForm.disabled;
+			enableDiscontinuation(row){ //启用/停用
+			     let apiId = [row.id];
+                 BatchStartAndStopCloudApplication({
+						Vue: this,
+						params: {
+							apiId,
+						}
+					}).then(data => {
+					this.$message({
+						message: "启用成功！",
+						type: "success",
+					});
+						// this.getDate(this.search.searchData); //刷新数据
+						this.cloudApplication();
+					});
 			},
-			doSearch() {
-				this.classifiedConfig[0].options.splice(0, this.classifiedConfig[0].options.length);
+			doAbleOrDisable(opName) { //批量启用
+				let len = this.$refs.table.selection.length - 1;
+				let apiId = '';
+				//判断启用的size是否等于当前页的数量
+				this.$refs.table.selection.forEach((item, index) => {    
+					apiId = apiId += len === index ? item.id : item.id + ",";
+					apiId = apiId.split(',')
+				});
+				let flag = this.tableData.length === this.$refs.table.selection.length;
+				this.$confirm("确定启用?", "提示", {
+				confirmButtonText: "确定",
+				cancelButtonText: "取消",
+				type: "warning"
+				}).then(() => {
+					BatchStartAndStopCloudApplication({
+						Vue: this,
+						params: {
+							apiId,
+						}
+					}).then(data => {
+						this.$message({
+						message: "启用成功！",
+						type: "success"
+					});
+					//回到上一页
+					if (flag) {
+						debugger;
+						this.$refs.table.selection.pageNo +=
+						this.$refs.table.selection - 1 >= 1 ? -1 : 0;
+					}
+					    this.cloudApplication(); //刷新数据
+					});
+				})
+				.catch(() => {
+					this.$message({
+					type: "info",
+					message: "已取消启用"
+					});
+				});
+			},
+			doSave() { //保存
+				if(this.saveType == '新增'){ //保存
+					this.$refs['toastBodys'].submitForm(this.eidtOperations.bind(this, true));
+				}else if(this.saveType == '编辑'){ //编辑
+					this.$refs['toastBodys'].submitForm(this.eidtOperationss.bind(this, true));
+				}
+			},
+			eidtOperations(){
+				newCloudApplication({ //保存实际操作
+					params: this.$refs['toastBodys'].ruleForm,
+					Vue: this
+				}).then(data => {
+						this.$message({
+						message: "保存成功！",
+						type: 'success'
+					});
+				
+					this.toastAddData.dialogVisible = false;
+				})
+			},
+			eidtOperationss(){
+				newCloudApplication({ //修改实际操作
+					params: this.$refs['toastBodys'].ruleForm,
+					Vue: this
+					}).then(data => {
+					this.$message({
+						message: "修改成功！",
+						type: 'success'
+					});
+					this.getDate(this.search.searchData);
+					this.toastAddData.dialogVisible = false;
+					})
+            },
+			doClickHandler(index, option) { //分页栏标签
+				if(index == 0){
+					this.classifiedConfig[1].options=  [];
+					this.queryParam.appType= option.value;
+					let mar = option.children;
+					mar.forEach(list =>  {
+						list.label = list.key;
+						list.value = list.value;		
+						this.classifiedConfig[1].options.push(list); //行业领域
+					})
+				}
+				if(index == 1){
+					this.queryParam.industry= option.value;
+				}
+			},
+			doSearch() { //获取分页栏标签
 				marketList({
 					Vue: this,
 					params: this.queryParam,
 				}).then(res => {
-					if (res.result) {
-						console.log(res)
-						let marketList = res.model;
+					if (res.code) {
+						let marketList = res.list;
 						if (marketList != null && marketList.length > 0) {
 							marketList.forEach(market => {
-								market.label = market.alias
-								market.value = market.id;
-								if (market.isAble == '已停用')
-									market.disabled = true
-								this.classifiedConfig[0].options.push(market);
+								market.label = market.key;
+								market.value = market.value;
+								this.classifiedConfig[0].options.push(market); //应用分类
 							});
-							//默认选中第一个
+							//应用分类默认选中第一个
 							this.selectedItems[0].value = this.classifiedConfig[0].options[0].value;
+							this.selectedItems[1].value = this.classifiedConfig[0].options[0].value;
 							this.doClickHandler(0, this.classifiedConfig[0].options[0])
+							this.doClickHandler(1, this.classifiedConfig[0].options[0])
 						}
 
 					}
 				})
-            },
-            //列表----------------------
-            doSearch() {
-
 			},
-			tableRowClick(row) {
+			tableRowClick(row) { //列表
+			    // debugger;
 				this.currSelItem = row;
 				if (row) {
 					this.$refs.table.toggleRowSelection(row);
@@ -210,38 +344,24 @@
 					this.$refs.table.clearSelection();
 				}
 			},
-			tableSelectChanged(selection) {
-				this.selItemArr = selection;
-				let isBatch = true;
-				if (!selection || selection.length == 0)
-					isBatch = false;
-				else {
-					selection.forEach(row => {
-						if (row.authType != '待认证')
-							isBatch = false;
+			tableSelectChanged(selection) {  //表格勾选触发
+				// this.batchDeleting(selection)
+			},
+			edit(row){  //编辑
+				// debugger;
+				this.toastAddData.dialogVisible = true;
+				this.toastAddData.title = "编辑";
+				this.saveType = '编辑';
+				setTimeout(() => {
+					let {
+						alias, //应用分类
+					} = row;
+					this.$set(this.$refs['toastBodys'],'ruleForm',{
+						alias, //应用分类
 					});
-				}
-				this.isBatch = isBatch
-			},
-			doView(row) {
-
-				if (row.certificationType == "个人") {
-					this.viewDetailData.isPer = true;
-					this.viewDetailData.perForm = { ...row
-					}
-					this.viewDetailData.ownerGender = "男";
-				} else {
-					this.viewDetailData.isPer = false;
-					this.viewDetailData.pubForm = { ...row
-					}
-					this.viewDetailData.pubForm.companyName = this.viewDetailData.pubForm.userName
-				}
-				this.viewDetailData.dialogVisible = true;
-
-			},
-			doAudit(){
-				this.isBatch = false;
-				this.showAudit();
+					//清除校验
+					this.$refs['toastBodys'].resetForm();
+				}, 0);
 			},
 			batchAudit(){
 				this.isBatch = true;
@@ -253,11 +373,32 @@
 				}
 				this.approvalData.passActive = true;
 				this.approvalData.dialogVisible = true;
-			}
+			},
+			empty(){ //清空条件
+				this.queryParam={};
+				this.selectedItems[0].value = this.classifiedConfig[0].options[0].value;
+				this.selectedItems[1].value = this.classifiedConfig[0].options[0].value;
+				this.doClickHandler(0, this.classifiedConfig[0].options[0]);
+				this.doClickHandler(1, this.classifiedConfig[0].options[0]);
+			},
+			setAttr(data){ //数据处理
+				for(let attr in data){
+					if((data[attr]==undefined) || data[attr]=="")delete data[attr];
+				}
+				return data;
+			},
+			cloudApplication(page){ //获取云应用列表
+				let params = {pageSize:this.page.pageSize,pageNo:this.page.pageNo,appName: this.queryParam.appName,isAble:this.queryParam.isAble,appType:this.queryParam.appType,industry:this.queryParam.industry}
+				params=this.setAttr(params);
+				cloudCompanyList({Vue:this,params:params}).then(res=>{  
+					this.tableData = res.list;
+				})
+		    },
 		},
 		mounted: function () {
-			this.doSearch();
-		}
+			this.doSearch(); //分页栏
+			this.cloudApplication(); //云应用列表
+		},
 	}
 </script>
 <style lang="less">

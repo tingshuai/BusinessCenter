@@ -1,7 +1,7 @@
 import http from "api/base.js"
 
 export let treestructure = (data, self) => {  //点击标题父级文件夹
-    // debugger;
+    debugger;
     return http.fetchGet('/folders/parents', data, self)
 }
 
@@ -237,7 +237,7 @@ export let permissionRoleListOrg = (data, self) => {
 查询文件列表
 */
 export let queryFileList = (data, self) => {
-    return http.fetchGet("/files", data, self)
+    return http.fetchGet("/resources/files", data, self)
 }
 
 export let permissionRoleListUser = (data, self) => {

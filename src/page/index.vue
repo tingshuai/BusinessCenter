@@ -155,7 +155,7 @@ var vueObj= {
                 {
                   id: 8,
                   title:'API接口',
-                  link:'/newApi'
+                  link:'/authDialogBody'
                 },
                 {
                   id: 9,

@@ -11,7 +11,7 @@ import releaseRecords from 'page/productManagement/productRelease/releaseRecords
 import see from 'page/productManagement/productRelease/see/see.vue';//查看
 import documentResources from 'page/resourceManagement/documentResources/documentResources.vue';//文件资源
 import newApplication from 'page/resourceManagement/cloudApplication/newApplication.vue';//云应用
-import newApi from 'page/resourceManagement/apiInterface/newApi.vue';//api接口
+import authDialogBody from 'page/resourceManagement/apiInterface/authDialogBody.vue';//api接口
 import equipmentModel from 'page/resourceManagement/equipmentModel/equipmentModel.vue';//设备模型
 import accountReceivable from 'page/management/accountReceivable/accountReceivable.vue';//应收款管理...
 import collectionDeliveryManagement from 'page/management/collectionDeliveryManagement/collectionDeliveryManagement.vue';//收发货管理...
@@ -82,9 +82,9 @@ export default new Router({
 			component: equipmentModel
 		},
 		{ //api接口
-			path: '/newApi',
-			name: 'newApi',
-			component: newApi
+			path: '/authDialogBody',
+			name: 'authDialogBody',
+			component: authDialogBody
 		},
 		{
 			path: '/accountReceivable',

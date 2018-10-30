@@ -51,6 +51,7 @@
 </div>	
 </template>
 
+
 <script type="text/babel">
 import TableColRender from "./TableColRender";
 import toolbar from "./toolbar.vue"

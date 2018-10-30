@@ -1,15 +1,16 @@
 <template>
 	<el-row :gutter="10" class="market-mgr">
 		<el-col :span="8">
+		<el-col :span="8"> 
 			<el-card>
 				<h1>市场概述</h1>
 				<el-form ref="form" class="rbox-form" size="small" :rules="rules" :model="form" label-width="130px">
-					<el-form-item label="市场名称:" prop="alias">
+					<el-form-item label="市场名称:5555" prop="alias">
 						<el-input :disabled="!editModel" v-model="form.alias"></el-input>
 					</el-form-item>
 					<el-form-item label="市场分类:">
-						<el-tag v-for="item in form.classList" v-show="item.deleted=='F'">{{item.alias}}</el-tag>
-						<el-button size="small" style="width: 80px;" type="primary" v-show="editModel" @click="doAttrMaintain">点击维护</el-button>
+						<el-tag v-for="item in form.classList">{{item.alias}}</el-tag>
+						<el-button size="small" style="width: 80px;" type="primary" v-show="editModel">点击维护</el-button>
 					</el-form-item>
 					<el-form-item label="创建时间">
 						<el-date-picker disabled v-model="form.createTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"
@@ -40,12 +41,12 @@
 			  <img src="../../../assets/img/404.jpg" />
 			</el-card>
 		</el-col>
-		<attr-maintain :config="maintainWinConfig" @doSave="doAttrSure"></attr-maintain>
 	</el-row>
-	
 </template>
 <script>
-
+	// import {
+	// 	saveOrUpdateMarket
+	// } from "../../../api/marketcenter-marketmgr.js"
 	export default {
 		props: ['form','editModel'],
 		data(){
@@ -56,45 +57,14 @@
 						message: '请输入市场名称...',
 						trigger: 'change'
 					}]
-				},
-				maintainWinConfig: {
-					title: '市场分类维护', //弹窗标题
-					dialogVisible: false, //弹窗显示
-					width: '600px', //弹窗宽
-					tempList: [],
-					emptyRow: {
-						id: 0,
-						alias: '',
-						deleted: 'F'
-					},
-					btnData: [{
-						isShow: true,
-						disabled: false,
-						name: '取消', //按钮名
-						method: 'cancel', //回调函数
-					}, {
-						disabled: false,
-						isShow: true,
-						name: '确定', //按钮名
-						method: 'doSave', //回调函数
-					}]
 				}
 			}
 		},
 		methods:{
-			doAttrMaintain(){
-				if(this.form.classList==null){
-						this.maintainWinConfig.tempList =[];
-				}else{
-					this.maintainWinConfig.tempList = JSON.parse(JSON.stringify(this.form.classList))
-				}
-	
-				this.maintainWinConfig.tempList.push({ ...this.maintainWinConfig.emptyRow
-				})
-				this.maintainWinConfig.dialogVisible = true
-			},
-			doAttrSure(tempArr){
-					this.form.classList = tempArr
+			validate() {
+				this.$refs['form'].validate((valid) => {
+					return valid;
+				});
 			}
 		}
 	}
@@ -105,7 +75,8 @@
 			line-height: 40px;
 		}
 		.el-tag{
-			margin: 5px;
+			margin-right: 10px;
+			padding: 0 20px;
 		}
 	}
 	

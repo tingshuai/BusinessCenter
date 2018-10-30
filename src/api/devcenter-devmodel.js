@@ -1,4 +1,4 @@
-import http from "api/base.js"
+import http from "./base.js"
 
 //设备中心--设备模型
 export let dataDefineIndustryList = (data, self) => {
@@ -22,3 +22,4 @@ export let devModelFilterList = (data, self) => {
 export let devModelResolutionList = (data, self) => {
     return http.fetchPost('/dev-model/resolution/list', data, self)
 }
+

@@ -23,7 +23,7 @@
 import {
     permissionRoleListOrg,
     permissionRoleListUser,
-    permissionRolePageUserPermission
+    queryFileList //查询文件列表
 
 } from './api.js';
 import mytable from "components/tableEx.vue"
@@ -34,29 +34,27 @@ export default {
     data(){
         return {
             formSearch:{
-                depart:"",
-                person:"",
+                filePath:"",  //文件后缀搜索
+                fileName:"", //文件名搜索
             },
             formSearchConfig:[
                 {
                     span:6,
-                    // label:"部门",
                     type: "input",
                     placeholder:"文件后缀搜索...",
                     itemStyle:"width:150px",
-                    key:"depart",
+                    key:"filePath",
                     dropDown:[
 
                     ]
                 },
                 {
                     span:6,
-                    // label:"姓名",
                     type: "input",
                     filterable: true,
                     placeholder:"文件名搜索...",
                     itemStyle:"width:150px",
-                    key:"person",
+                    key:"fileName",
                     dropDown:[
 
                     ]
@@ -78,48 +76,41 @@ export default {
                         ],
                         //表格字段配置
                         colConfig: [
-                        {
-                        field: "id",
-                        label: "选择",
-                        type: "text",
-                        minWidth:50
-                        },
-                        {
-                        field: "treeNamePath",
-                        label: "文件名称",
-                        type: "text"
-                        },
-                        {
-                        field: "modelAlias",
-                        label: "文件后缀",
-                        type: "text"
-                        },
-                        {
-                        field: "versionNo",
-                        label: "上传时间",
-                        type: "text",
-                        transVal(val){
-                            return "V"+val+'.0';
-                        }
-                        },
-                        {
-                        field: "schemeAlias",
-                        label: "上传人",
-                        type: "text"
-                        },
-                        {
-                        field: "orgPath",
-                        label: "文件大小(KB)",
-                        type: "text",
-                        transVal(val){
-                            return val.replace(",","/");
-                        }
-                        },
-                        {
-                        field: "name",
-                        label: "操作",
-                        type: "text"
-                        }
+                            {
+                                field: "id",
+                                label: "选择",
+                                type: "text",
+                            },
+                            {
+                                field: "fileName",
+                                label: "文件名称",
+                                type: "text"
+                            },
+                            {
+                                field: "filePath",
+                                label: "文件后缀",
+                                type: "text"
+                            },
+                            {
+                                field: "modifyTime",
+                                label: "上传时间",
+                                type: "text",
+                            },
+                            {
+                                field: "deleted",
+                                label: "上传人",
+                                type: "text"
+                            },
+                            {
+                                field: "fileSize",
+                                label: "文件大小(KB)",
+                                type: "text",
+                            },
+                            {
+                                field: "name",
+                                label: "操作",
+                                type: "btnsText"
+                            }
                         ],
                         isBorder: true,
                         size:'medium',
@@ -137,6 +128,9 @@ export default {
                     tableData: [],
                 },
         }
+    },
+    mounted(){
+        this.init();
     },
     methods:{
         init(){
@@ -236,16 +230,17 @@ export default {
             this.resetSearch();
             this.getOrgPersonPermission();
         },
-        getOrgPersonPermission(){
-            let params = {pageSize:this.table.tableConfig.pageSize,pageNo:this.table.tableConfig.pageNo,orgId: this.formSearch.orgId, userId: this.formSearch.person }
+        getOrgPersonPermission(){ //查询文件列表
+            let params = {pageSize:this.table.tableConfig.pageSize,pageNo:this.table.tableConfig.pageNo,filePath: this.formSearch.filePath, fileName: this.formSearch.fileName}
             params=this.setAttr(params);
-            permissionRolePageUserPermission({Vue:this,params:params}).then(res=>{
+            queryFileList({Vue:this,params:params}).then(res=>{  
                 let temp=[];
-                if(res.model && res.model.items){
-                    this.$set(this.table.tableConfig,"total",res.model.numRows)
-                    this.$set(this.table.tableConfig,"loadShow",false);
-                    this.$set(this.table,"tableData",res.model.items);
-                }
+                // if(res.model && res.model.items){
+                    // this.$set(this.table.tableConfig,"total",res.model.numRows)
+                    // this.$set(this.table.tableConfig,"loadShow",false);
+                    this.$set(this.table,"tableData",res.list);
+                // }
+                //  debugger;
             })
         },
         pageChange(){

@@ -1,4 +1,4 @@
-//云应用
+//云应用    ...
 <template>
 	<div class="market-mgr">
 		<classified-search :config="classifiedConfig" :selected="selectedItems" @doSelectHandler="doClickHandler" />
@@ -17,7 +17,7 @@
 			</span>
 
 			<span slot="right">
-				<el-button icon="el-icon-plus" size="small" style="width: 100px;" type="primary" @click="doAdd">新增应用</el-button>
+				<el-button icon="el-icon-plus" size="small" style="width: 100px;" type="primary" @click="doAdd">新增API</el-button>
 				<el-button icon="el-icon-delete" size="small" style="width: 100px;" @click="batchDeleting()">批量删除</el-button>
 				<el-button icon="el-icon-setting" size="small" style="width: 100px;" @click="doAbleOrDisable()">批量启停</el-button>
 			</span>
@@ -27,18 +27,19 @@
 			<el-table height="600" border stripe ref="table" :data="tableData" style="width: 100%" @selection-change="tableSelectChanged"
 			    @row-dblclick="remove" @row-click="tableRowClick">
 				<el-table-column type="selection" width="55" />
-				<el-table-column resizable show-overflow-tooltip property="authType" align="center" label="选择" width="120">
+				<el-table-column resizable show-overflow-tooltip property="authType" align="center" label="选择" width="100">
 					<template slot-scope="scope">
 						<el-tag size="medium" :type="scope.row.authType=='已认证'?'success':scope.row.authType=='待认证'?'warning':scope.row.authType=='认证失败'?'danger':'info'">{{ scope.row.authType }}</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column resizable show-overflow-tooltip property="alias" align="center" label="应用分类" width="120" />
-				<el-table-column resizable show-overflow-tooltip property="authUrl" align="center" label="行业领域" width="120" />
-				<el-table-column resizable show-overflow-tooltip property="spaceSize" align="center" label="应用编码" width="120" />
-				<el-table-column resizable show-overflow-tooltip property="releaseUrl" align="center" label="应用名称" width="120" />
-				<el-table-column resizable show-overflow-tooltip property="version" align="center" label="版本号" />
-				<el-table-column resizable show-overflow-tooltip property="type" align="center" label="支持云存储" width="120" />
-				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="支持短信" width="120" />
+				<el-table-column resizable show-overflow-tooltip property="apiType" align="center" label="接口分类" width="100" />
+				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="行业领域" width="100" />
+				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="应用专属" width="100" />
+				<el-table-column resizable show-overflow-tooltip property="code" align="center" label="接口编码" width="100" />
+				<el-table-column resizable show-overflow-tooltip property="version" align="center" label="接口名称" />
+				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="版本号" width="100" />
+				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="接口地址" width="120" />
+				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="可见设置" width="120" />
 				<el-table-column label="操作" align="center" width="300">
 					<template slot-scope="scope">
 						<el-button size="mini" type="primary" @click="edit(scope.row)">编辑</el-button>
@@ -80,7 +81,7 @@
 				toastAddData: {
 					title: "新增应用", //弹窗标题
 					dialogVisible: false, //弹窗显示
-					width: "1000px", //弹窗宽
+					width: "600px", //弹窗宽
 					btnData: [{
 					name: '保存', //按钮名
 					method: 'doSave', //回调函数
@@ -95,17 +96,23 @@
 					appName:'',  //应用名称
 					appType: '', //应用分类
 					industry: '', //行业领域
+					appId:"", //应用专属
 				},
 				//筛选数据
 				classifiedConfig: [{
-					title: '应用分类:',
-					options: [
-					]
+					title: '接口分类:',
+					options: []
 				},{
 					title: '行业领域:',
 					options: []
+				},{
+					title: '应用专属:',
+					options: []
 				}],
 				selectedItems: [{
+					value: '',
+					expanded: false
+				},{
 					value: '',
 					expanded: false
 				},{
@@ -298,6 +305,7 @@
 					})
             },
 			doClickHandler(index, option) { //分页栏标签
+			    debugger;
 				if(index == 0){
 					this.classifiedConfig[1].options=  [];
 					this.queryParam.appType= option.value;
@@ -309,7 +317,18 @@
 					})
 				}
 				if(index == 1){
+					this.classifiedConfig[2].options=  [];
 					this.queryParam.industry= option.value;
+					let mars = option.children;
+					mars.forEach(lists =>  {
+						lists.label = lists.key;
+						lists.value = lists.value;		
+						this.classifiedConfig[2].options.push(lists); //行业领域
+						// debugger;
+					})
+				}
+				if(index == 2){
+                    this.queryParam.appId= option.value;
 				}
 			},
 			doSearch() { //获取分页栏标签
@@ -328,8 +347,11 @@
 							//应用分类默认选中第一个
 							this.selectedItems[0].value = this.classifiedConfig[0].options[0].value;
 							this.selectedItems[1].value = this.classifiedConfig[0].options[0].value;
+							this.selectedItems[2].value = this.classifiedConfig[0].options[0].value;
 							this.doClickHandler(0, this.classifiedConfig[0].options[0])
 							this.doClickHandler(1, this.classifiedConfig[0].options[0])
+							this.doClickHandler(2, this.classifiedConfig[0].options[0])
+							// debugger;
 						}
 
 					}
@@ -378,8 +400,10 @@
 				this.queryParam={};
 				this.selectedItems[0].value = this.classifiedConfig[0].options[0].value;
 				this.selectedItems[1].value = this.classifiedConfig[0].options[0].value;
+				this.selectedItems[2].value = this.classifiedConfig[0].options[0].value;
 				this.doClickHandler(0, this.classifiedConfig[0].options[0]);
 				this.doClickHandler(1, this.classifiedConfig[0].options[0]);
+				this.doClickHandler(2, this.classifiedConfig[0].options[0]);
 			},
 			setAttr(data){ //数据处理
 				for(let attr in data){
@@ -388,7 +412,7 @@
 				return data;
 			},
 			cloudApplication(page){ //获取云应用列表
-				let params = {pageSize:this.page.pageSize,pageNo:this.page.pageNo,appName: this.queryParam.appName,isAble:this.queryParam.isAble,appType:this.queryParam.appType,industry:this.queryParam.industry}
+				let params = {pageSize:this.page.pageSize,pageNo:this.page.pageNo,appName: this.queryParam.appName,isAble:this.queryParam.isAble,appType:this.queryParam.appType,industry:this.queryParam.industry,appId:this.queryParam.appid}
 				params=this.setAttr(params);
 				cloudCompanyList({Vue:this,params:params}).then(res=>{  
 					this.tableData = res.list;

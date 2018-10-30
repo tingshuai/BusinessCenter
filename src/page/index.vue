@@ -150,12 +150,12 @@ var vueObj= {
                 {
                   id: 7,
                   title:'云应用',
-                  link:'/cloudApplication'
+                  link:'/newApplication'
                 },
                 {
                   id: 8,
                   title:'API接口',
-                  link:'/apiInterface'
+                  link:'/authDialogBody'
                 },
                 {
                   id: 9,

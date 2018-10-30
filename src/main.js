@@ -13,10 +13,12 @@ import myToast from './components/Toast.vue' //弹窗
 
 import toolbars from 'components/qfCommon/toolbar.vue' //工具栏
 import ClassifiedSearch from 'components/qfCommon/ClassifiedSearch.vue' //分页栏
+import ClassifiedSearchs from 'components/zyxCommon/ClassifiedSearch.vue' //分页栏
 import page from './components/theme/page.vue'
 Vue.component('toolbars', toolbars)  //工具栏
 Vue.component('PageTool', pagetool)  //分页栏
 Vue.component('ClassifiedSearch', ClassifiedSearch)  //分页栏
+Vue.component('ClassifiedSearchs', ClassifiedSearchs)  //分页栏
 Vue.component('myToast', myToast)  //弹窗
 Vue.config.productionTip = false
 import 'babel-polyfill';

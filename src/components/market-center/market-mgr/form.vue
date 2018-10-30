@@ -1,6 +1,5 @@
 <template>
 	<el-row :gutter="10" class="market-mgr">
-		<el-col :span="8">
 		<el-col :span="8"> 
 			<el-card>
 				<h1>市场概述</h1>

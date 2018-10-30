@@ -12,7 +12,7 @@ export default {
             axios.get((noPocPort? url : (this.getPocPort() + url)), {
                 params
             }).then(res => {
-                if (res.data.result) {
+                if (res.data.code == 200) {
                     resolve(res.data)
                 } else {
                     if (data.Vue) {

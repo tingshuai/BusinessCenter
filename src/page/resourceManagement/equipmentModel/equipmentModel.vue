@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<classified-search :config="classifiedConfig" :selected="selectedItems" @doSelectHandler="doClickHandler" />
+		<classified-searchs :config="classifiedConfig" :selected="selectedItems" @doSelectHandler="doClickHandler" />
 		<el-tabs v-model="activeName" class="model-info" @tab-click="doTabClick">
 			<el-tab-pane label="模型概况" name="model-info">
 				<model-info :form="modelForm"/>

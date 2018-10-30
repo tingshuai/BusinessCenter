@@ -1,7 +1,7 @@
 //云应用    ...
 <template>
 	<div class="market-mgr">
-		<classified-search :config="classifiedConfig" :selected="selectedItems" @doSelectHandler="doClickHandler" />
+		<classified-searchs :config="classifiedConfig" :selected="selectedItems" @doSelectHandler="doClickHandler" />
 		<toolbars class="custom-toolbar">
 			<span slot="left">
 				<el-radio-group size="small" v-model="queryParam.isAble" @change="cloudApplication">

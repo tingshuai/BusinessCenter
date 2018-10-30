@@ -2,7 +2,7 @@
 	<div>
 		<section class="wrap" v-for="(item,index) in config">
 			<aside class="title">{{ item.title }}</aside>
-			<aside class="terms"><span v-for="(it,i) in item.options" class="text" v-bind:class="[ it.act ? 'act' : '' ]" @click="triggerEvent(it,index,i)">{{ it.key || '' }}</span></aside>
+			<aside class="terms"><span v-for="(it,i) in item.options" class="text" v-bind:class="[ curIndex[index] == i ? 'act' : '' ]" @click="triggerEvent(it,index,i)">{{ it.key || '' }}</span></aside>
 		</section>
 	</div>
 </template>
@@ -23,13 +23,8 @@
 		},
 		methods: {
 			triggerEvent(data,index,i){
-				let that = this;
-				this.curIndex[index] = i;
-				this.config[index].options.forEach((val,i,arr)=>{
-					that.$set( val ,'act',false);
-				})
-				that.$set(that.config[index].options[i],'act',true);
-				this.$emit("selected",data,this.curIndex);
+				this.curIndex.splice(index,1,i);
+				this.$emit("selected",data,this.curIndex,index);
 				return;
 			}
 		},

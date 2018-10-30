@@ -19,7 +19,7 @@ import modelTree from "common/modelTree.vue" //树结构
 import authQuery from "./authQuery.vue" //表格
 import {mapState} from "vuex"
 import {
-    warehouseList,
+    treestructure, //树结构
 } from './api.js';
 export default { 
     components:{ 
@@ -62,8 +62,11 @@ export default {
                     {
                     id: 0,
                     isEdit:false,
-                    label: '文件夹',
-                    children:[]
+                    label: '所有文件夹',
+                    children:[{
+                        label:"wew",
+                        value:'1'
+                    }]
                     }
                 ],
                 propsTree: {
@@ -96,7 +99,12 @@ export default {
                                     rows:1,//textarea适用
                                     autoComplete:"off",
                                     readonly:true,
-                                    rules:[],
+                                    rules:[
+                                        {
+                        label:"wew",
+                        value:'1'
+                    }
+                                    ],
                                 },
                                 {   
                                     colStyle:"",
@@ -153,6 +161,7 @@ export default {
                                                     treeNamePath:data.config.formData.treeNamePath
                                                 }
                                             warehouseAdd({Vue:this,params:params}).then(res=>{
+                                                debugger;
                                                 if(res.result){
                                                     this.$refs["modelTree"].loadTree(this.treeConfig.evtNode,this.treeConfig.evtNode.data);
                                                     this.$refs["modelTree"].closeTreeModal();
@@ -296,6 +305,7 @@ export default {
                                                     alias:data.config.formData.name,
                                                 }
                                             warehouseEdit({Vue:this,params:params}).then(res=>{
+                                                debugger;
                                                 if(res.result){
                                                     res.model.label=res.model.alias;
                                                     this.treeConfig.evtNode.data=res.model;
@@ -421,6 +431,7 @@ export default {
                             ],
                             eventCB:{//回调事件
                                 formBtnClicked:(data)=>{
+                                    debugger;
                                     console.log("done2",data);
                                     if(data.index==0){
                                         let modal=this.$refs.modelTree.$refs.qwModalFormTreeSee;
@@ -457,10 +468,11 @@ export default {
         }
     },
     mounted(){
-        // this.init();
+        // this.$refs.authQuery.init();
     },
     methods:{
         BeforNodeDelete(data){ //树结构
+            debugger;
             if(data.node==this.treeConfig.curNode){
                 let id=data.node.parent.data.id;
                 if(data.node.parent.data.children.length>1){
@@ -490,13 +502,50 @@ export default {
             
         },
         /*tree label 点击事件回调*/
-        nodeLabelClicked(node){
-            this.getDataModelList(node);
-        },
+        // nodeLabelClicked(node){
+        //     this.getDataModelList(node);
+        // },
         /*关闭前调用*/ 
         ruleDialogClose(){
            
-        }
+        },
+        //点击标题
+        nodeLabelClicked(node,data){
+            debugger;
+            this.treeConfig.curNode=node;
+            let params = {warehouseId: node.data.id}
+            treestructure({Vue:this,params:params}).then(res=>{
+                if(res.result){
+                    this.changeToobarFilter(0);
+                    this.configFilter[0].items=res.model;
+                    if(res.model.length==0){
+                        this.setNodata(true);
+                        this.configBlock.curMod="info"  
+                        setTimeout(() => {
+                            this.resetEditData();    
+                        }, 30);                  
+                    }else{
+                        this.configFilter[0].items=this.transFilterBtnData(res.model);
+                        this.configBlock.curMod="info";                        
+                        this.changFilterActiveIndex(0,0);
+                    }
+                }
+            })
+        },
+        setNodata(tag=false){
+            if(tag){
+                this.configBlock.isNoData = true;
+                this.configBlock.modInfo.rgroup.items[1].disabled=true;
+                this.configBlock.modInfo.rgroup.items[2].disabled=true;
+                this.configBlock.modInfo.rgroup.items[3].disabled=true;
+                //  console.log("this.configBlock.modInfo.rgroup",this.configBlock.modInfo.rgroup)
+            }else{
+                this.configBlock.isNoData = false;
+                this.configBlock.modInfo.rgroup.items[1].disabled=false;
+                this.configBlock.modInfo.rgroup.items[2].disabled=false;
+                this.configBlock.modInfo.rgroup.items[3].disabled=false; 
+            }
+        },
     }
 }
 </script>

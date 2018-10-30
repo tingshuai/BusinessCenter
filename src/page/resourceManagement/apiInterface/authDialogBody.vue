@@ -305,7 +305,7 @@
 					})
             },
 			doClickHandler(index, option) { //分页栏标签
-			    // debugger;
+			    debugger;
 				if(index == 0){
 					this.classifiedConfig[1].options=  [];
 					this.queryParam.appType= option.value;
@@ -318,7 +318,7 @@
 				}
 				if(index == 1){
 					this.classifiedConfig[2].options=  [];
-					// this.queryParam.industry= option.value;
+					this.queryParam.industry= option.value;
 					let mars = option.children;
 					mars.forEach(lists =>  {
 						lists.label = lists.key;
@@ -351,6 +351,7 @@
 							this.doClickHandler(0, this.classifiedConfig[0].options[0])
 							this.doClickHandler(1, this.classifiedConfig[0].options[0])
 							this.doClickHandler(2, this.classifiedConfig[0].options[0])
+							// debugger;
 						}
 
 					}

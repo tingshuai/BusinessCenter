@@ -4,7 +4,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css';
 import Element from 'element-ui'
 import ajax from './api/base.js'
-import router from './router/index.js'
+import router from './router/index.js' 
 import store from './store/index.js'
 import 'babel-polyfill'
 
@@ -14,11 +14,13 @@ import myToast from './components/Toast.vue' //弹窗
 import toolbars from 'components/qfCommon/toolbar.vue' //工具栏
 import ClassifiedSearch from 'components/qfCommon/ClassifiedSearch.vue' //分页栏
 import ClassifiedSearchs from 'components/zyxCommon/ClassifiedSearch.vue' //分页栏
+import Loading from 'components/zyxCommon/Loading.vue' //loading
 import page from './components/theme/page.vue'
 Vue.component('toolbars', toolbars)  //工具栏
 Vue.component('PageTool', pagetool)  //分页栏
 Vue.component('ClassifiedSearch', ClassifiedSearch)  //分页栏
 Vue.component('ClassifiedSearchs', ClassifiedSearchs)  //分页栏
+Vue.component('Loading', Loading)
 Vue.component('myToast', myToast)  //弹窗
 Vue.config.productionTip = false
 import 'babel-polyfill';

@@ -1,7 +1,7 @@
 <template>
 <div class="details">
     <section>
-		<el-row type="flex" class="part_right">
+		<el-row type="flex" class="part_right"> 
 			<el-col :span="12" class="_left">
                 <aside class="title0">产品概况</aside>
                 <aside class="part_left">

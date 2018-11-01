@@ -15,12 +15,16 @@ import toolbars from 'components/qfCommon/toolbar.vue' //工具栏
 import ClassifiedSearch from 'components/qfCommon/ClassifiedSearch.vue' //分页栏
 import ClassifiedSearchs from 'components/zyxCommon/ClassifiedSearch.vue' //分页栏
 import Loading from 'components/zyxCommon/Loading.vue' //loading
+import toolbar from 'components/zyxCommon/toolbar.vue' //按纽组
 import page from './components/theme/page.vue'
+
+
+Vue.component('toolbar', toolbar) //按纽组
 Vue.component('toolbars', toolbars)  //工具栏
 Vue.component('PageTool', pagetool)  //分页栏
 Vue.component('ClassifiedSearch', ClassifiedSearch)  //分页栏
 Vue.component('ClassifiedSearchs', ClassifiedSearchs)  //分页栏
-Vue.component('Loading', Loading)
+Vue.component('Loading', Loading) //loading
 Vue.component('myToast', myToast)  //弹窗
 Vue.config.productionTip = false
 import 'babel-polyfill';
@@ -32,7 +36,6 @@ import 'babel-polyfill';
 Vue.use(Element);
 Vue.component('Page',page)
 Vue.component('ClassifiedSearch', ClassifiedSearch)
-Vue.component('toolbar', toolbar)
 
 new Vue({
   el: '#qwApp',

@@ -1,14 +1,8 @@
-import http from "api/base.js"
+import http from "../../api/base.js"
 
 export let warehouseList = (data, self) => {
-    // debugger;
-    return http.fetchPost('/resources/folders/parents', data, self)
+    return http.fetchPost('/warehouse/list', data, self)
 }
-
-
-
-
-
 
 export let warehouseGrid = (data, self) => {
     return http.fetchPost('/warehouse/grid', data, self)

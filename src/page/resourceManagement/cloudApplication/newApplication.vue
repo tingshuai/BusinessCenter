@@ -16,15 +16,15 @@
                  </span>
 			</span>
 
-			<span slot="right">
+			<!-- <span slot="right">
 				<el-button icon="el-icon-plus" size="small" style="width: 100px;" type="primary" @click="doAdd">新增应用</el-button>
 				<el-button icon="el-icon-delete" size="small" style="width: 100px;" @click="batchDeleting()">批量删除</el-button>
 				<el-button icon="el-icon-setting" size="small" style="width: 100px;" @click="doAbleOrDisable()">批量启停</el-button>
-			</span>
+			</span> -->
 		</toolbars>
 
-        <div>
-			<el-table height="600" border stripe ref="table" :data="tableData" style="width: 100%" @selection-change="tableSelectChanged"
+        <!-- <div> -->
+			<!-- <el-table height="600" border stripe ref="table" :data="tableData" style="width: 100%" @selection-change="tableSelectChanged"
 			    @row-dblclick="remove" @row-click="tableRowClick">
 				<el-table-column type="selection" width="55" />
 				<el-table-column resizable show-overflow-tooltip property="authType" align="center" label="选择" width="120">
@@ -47,11 +47,18 @@
 					</template>
 				</el-table-column>
 				</el-table-column>
-			</el-table>
-			<div class="my-pagination">
+			</el-table> -->
+			<!-- <div class="my-pagination">
 				<page-tool @doSearch="doSearch" :pageParam="page"></page-tool>
-			</div>
-		</div>
+			</div> -->
+		<!-- </div> -->
+
+
+         <!-- 表格 -->
+         <mytable style="background:#fff" :tableConfig="tableConfig" :tableData="tableData" @doAdd="doAdd" @batchDeleting="batchDeleting" @doAbleOrDisable="doAbleOrDisable" @buttonFunction="buttonFunction"></mytable>
+
+
+
 		<!-- 弹窗 -->
 		<my-toast :config="toastAddData" @doSave="doSave" @close="close">
 		    <toast-body ref='toastBodys'></toast-body>
@@ -65,14 +72,13 @@
 		newCloudApplication, //新增云应用
 		batchDeleting, //批量删除云应用
 		BatchStartAndStopCloudApplication, //批量启停云应用
-		saveOrUpdateMarket,
-		deletMarket,
-		ableOrDisableMarket
 	} from "./api.js"
 	import toastBody from './toastBody' //弹窗
+	import mytable from "components/zyxCommon/Table.vue" //表格
 	export default {
 		components: {
-			toastBody,
+			toastBody, //弹窗
+			mytable,//表格
 		},
 		data() {
 			return {
@@ -124,12 +130,83 @@
 				queryParam: {
 					status:''
 				},
-				page: {
-					pageNo: 1,
+				// page: {
+				// 	pageNo: 1,
+				// 	pageSize: 10,
+				// 	total: 0
+				// },
+				// tableData: [], //表格
+				tableConfig:{
+					//操作按钮配置
+					toolbarConfig: [{
+						disabled: false,
+						method: "doAdd",
+						type:'primary',
+						name: "新增应用"
+					},{
+						disabled: true,
+						method: "batchDeleting",
+						name: "批量删除"
+					},{
+						disabled: true,
+						method: "doAbleOrDisable",
+						name: "批量启停"
+					}
+					],
+					//表格字段配置 
+					colConfig: [{
+						field: "alias",
+						label: "应用分类",
+						type: "text",
+					},
+						{ 
+						field: "authUrl",
+						label: "行业领域",
+						type: "text",
+					},
+					{
+						field: "spaceSize",
+						label: "应用编码",
+						type: "text",
+					},
+					{
+						field: "releaseUrl",
+						label: "应用名称",
+						type: "text",
+					},
+					{
+						field: "version", 
+						label: "版本号",
+						type: "text",
+					},
+					{
+						field: "type", 
+						label: "支持云存储",
+						type: "text",
+					},
+					{
+						field: "industry", 
+						label: "支持短信",
+						type: "text",
+					},
+					{
+						field: "查看详情",
+						label: "操作",
+						type: "btnText6",
+					}
+					],
+					isSelection: true, //是否可选
+					isPage: true, //是否分页
+					currentSelectArr: [], //当前勾选的数据
+					align: "center", //文本对齐方式
+					pageNum: 1,
 					pageSize: 10,
-					total: 0
+					total: 0,
+					isHigh: false,
+					isLoading: true, //是否开启loading
+					loadShow: false //loading控制
 				},
-				tableData: [], //表格
+				tableData: []
 			
 			}
 		},
@@ -141,8 +218,8 @@
 				this.toastAddData.dialogVisible = true;
 				this.saveType = '新增';
 			},
-			remove(row) {  //删除
-                let apiId = [row.id];
+			remove(data) {  //删除
+                let apiId = [data.id];
 				this.$confirm("确定删除?", "提示", {
 					confirmButtonText: "确定",
 					cancelButtonText: "取消",
@@ -169,14 +246,14 @@
 				});
 			},
 			batchDeleting() {  //批量删除
-				let len = this.$refs.table.selection.length - 1;
+				let len = this.tableConfig.currentSelectArr.length - 1;
 				let apiId = '';
 				//判断删除的size是否等于当前页的数量
-				this.$refs.table.selection.forEach((item, index) => {    
+				this.tableConfig.currentSelectArr.forEach((item, index) => {    
 					apiId = apiId += len === index ? item.id : item.id + ",";
 					apiId = apiId.split(',')
 				});
-				let flag = this.tableData.length === this.$refs.table.selection.length;
+				let flag = this.tableData.length === this.tableConfig.currentSelectArr.length;
 				this.$confirm("确定删除?", "提示", {
 				confirmButtonText: "确定",
 				cancelButtonText: "取消",
@@ -194,9 +271,8 @@
 					});
 					//回到上一页
 					if (flag) {
-						debugger;
-						this.$refs.table.selection.pageNo +=
-						this.$refs.table.selection - 1 >= 1 ? -1 : 0;
+						 this.tableConfig.pageNo +=
+                         this.tableConfig.pageNo - 1 >= 1 ? -1 : 0;
 					}
 					    this.cloudApplication(); //刷新数据
 					});
@@ -208,8 +284,8 @@
 					});
 				});
 			},
-			enableDiscontinuation(row){ //启用/停用
-			     let apiId = [row.id];
+			enableDiscontinuation(data){ //启用/停用
+			     let apiId = [data.id];
                  BatchStartAndStopCloudApplication({
 						Vue: this,
 						params: {
@@ -224,15 +300,15 @@
 						this.cloudApplication();
 					});
 			},
-			doAbleOrDisable(opName) { //批量启用
-				let len = this.$refs.table.selection.length - 1;
+			doAbleOrDisable() { //批量启用
+			    let len = this.tableConfig.currentSelectArr.length - 1;
 				let apiId = '';
-				//判断启用的size是否等于当前页的数量
-				this.$refs.table.selection.forEach((item, index) => {    
+				//判断删除的size是否等于当前页的数量
+				this.tableConfig.currentSelectArr.forEach((item, index) => {    
 					apiId = apiId += len === index ? item.id : item.id + ",";
 					apiId = apiId.split(',')
 				});
-				let flag = this.tableData.length === this.$refs.table.selection.length;
+				let flag = this.tableData.length === this.tableConfig.currentSelectArr.length;
 				this.$confirm("确定启用?", "提示", {
 				confirmButtonText: "确定",
 				cancelButtonText: "取消",
@@ -349,7 +425,16 @@
 			tableSelectChanged(selection) {  //表格勾选触发
 				// this.batchDeleting(selection)
 			},
-			edit(row){  //编辑
+			buttonFunction(data,type){
+				if(type == 'edit'){ //编辑
+                      this.edit(data);
+				}else if(type =='remove'){  //删除
+				      this.remove(data);
+				}else if(type == 'enableDiscontinuation'){ //启用
+				      this.enableDiscontinuation(data);
+				}
+			},
+			edit(data){  //编辑
 				// debugger;
 				this.toastAddData.dialogVisible = true;
 				this.toastAddData.title = "编辑";
@@ -357,7 +442,7 @@
 				setTimeout(() => {
 					let {
 						alias, //应用分类
-					} = row;
+					} = data;
 					this.$set(this.$refs['toastBodys'],'ruleForm',{
 						alias, //应用分类
 					});
@@ -390,7 +475,7 @@
 				return data;
 			},
 			cloudApplication(page){ //获取云应用列表
-				let params = {pageSize:this.page.pageSize,pageNo:this.page.pageNo,appName: this.queryParam.appName,isAble:this.queryParam.isAble,appType:this.queryParam.appType,industry:this.queryParam.industry}
+				let params = {pageSize:this.tableConfig.pageSize,pageNo:this.tableConfig.pageNum,appName: this.queryParam.appName,isAble:this.queryParam.isAble,appType:this.queryParam.appType,industry:this.queryParam.industry}
 				params=this.setAttr(params);
 				cloudCompanyList({Vue:this,params:params}).then(res=>{  
 					this.tableData = res.list;
@@ -401,10 +486,28 @@
 			this.doSearch(); //分页栏
 			this.cloudApplication(); //云应用列表
 		},
+		watch: { //监听按钮
+			'tableConfig.currentSelectArr': function () {
+				if (this.tableConfig.currentSelectArr.length === 0) {
+					this.tableConfig.toolbarConfig[1].disabled = true
+					this.tableConfig.toolbarConfig[2].disabled = true
+				} else {
+					this.tableConfig.toolbarConfig[1].disabled = false
+					this.tableConfig.toolbarConfig[2].disabled = false
+				}
+			}
+		}
 	}
 </script>
 <style lang="less">
-	.custom-toolbar {
-		margin: 10px 0px;
-    }
+    .market-mgr{
+		position: relative;
+	}
+	.custom-toolbar{
+		width:60%;
+		// border:1px solid red;
+		position: absolute;
+        top:100px;
+        z-index: 999;
+	}
 </style>

@@ -102,11 +102,11 @@
             <el-button size="small" type="text" @click="buttonFunction(scope.row,'look')">详情</el-button>
             <el-button size="small" class="btn-text-remove" type="text" @click="buttonFunction(scope.row,'password')">修改密码</el-button>
           </span>
-          <!-- 设备出库/出库管理 -->
+          <!-- 资源管理/云应用 -->
           <span v-else-if="item.type == 'btnText6'" class="btn-text">
-            <el-button size="small" type="text" @click="buttonFunction(scope.row,'update')">编辑</el-button>
+            <el-button size="small" type="text" @click="buttonFunction(scope.row,'edit')">编辑</el-button>
             <el-button size="small" class="btn-text-remove" type="text" @click="buttonFunction(scope.row,'remove') ">删除</el-button>
-            <el-button size="small" type="text" @click="buttonFunction(scope.row,'look')">详情</el-button>
+            <el-button size="small" class="btn-text-remove" type="text" @click="buttonFunction(scope.row,'enableDiscontinuation')">启用</el-button>
           </span>
           <!-- 未完待续 -->
         </template>
@@ -136,7 +136,7 @@
         //   toolbarConfig:[{//操作按钮配置
         //           loading:true,
         //           icon:'xxx',
-        //           disabled:true,
+        //           disabled:true, 
         //           method:'xxxx',
         //           name:'小黑'
         //     }],

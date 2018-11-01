@@ -11,12 +11,12 @@
             </el-form-item>
             <div class="el-form-item" style="padding-top:8px;">
                 <el-button type="primary" size="mini" @click="getOrgPersonPermission">查询</el-button>       
-                <el-button size="mini" @click="resetAndSearch">清空</el-button> 
+                <el-button size="mini">清空</el-button> 
             </div>      
         </el-form>
     </div>
     <!-- 表格 -->
-    <mytable style="z-index:1;" :toolbarConfig="table.tableConfig.toolbarConfig" :tableConfig="table.tableConfig" :border="false" :tableData="table.tableData" @pageChange="pageChange" @sizeChange="sizeChange"></mytable>
+    <mytable style="margin-top:30px;" :tableConfig="tableConfig" :tableData="tableData" @sizeChange="sizeChange" @pageChange="pageChange"></mytable>
 </div>
 </template>
 <script>
@@ -26,7 +26,7 @@ import {
     queryFileList //查询文件列表
 
 } from './api.js';
-import mytable from "components/tableEx.vue"
+import mytable from "components/zyxCommon/Table.vue" 
 export default {
     components:{
         mytable
@@ -60,73 +60,64 @@ export default {
                     ]
                 }
             ],
-             table:{
-                    tableConfig: {
-                        //操作按钮配置
-                        toolbarConfig: [
-                            {
-                                name:'批量上传',
-                                type:'primary',
-                            },
-                            {
-                                name:'批量删除',
-                                type:'',
-                                disabled:true,
-                            },
-                        ],
-                        //表格字段配置
-                        colConfig: [
-                            {
-                                field: "id",
-                                label: "选择",
-                                type: "text",
-                            },
-                            {
-                                field: "fileName",
-                                label: "文件名称",
-                                type: "text"
-                            },
-                            {
-                                field: "filePath",
-                                label: "文件后缀",
-                                type: "text"
-                            },
-                            {
-                                field: "modifyTime",
-                                label: "上传时间",
-                                type: "text",
-                            },
-                            {
-                                field: "deleted",
-                                label: "上传人",
-                                type: "text"
-                            },
-                            {
-                                field: "fileSize",
-                                label: "文件大小(KB)",
-                                type: "text",
-                            },
-                            {
-                                field: "name",
-                                label: "操作",
-                                type: "btnsText"
-                            }
-                        ],
-                        isBorder: true,
-                        size:'medium',
-                        isSelection: false, //是否可选
-                        isPage: true, //是否分页
-                        currentSelectArr: [], //当前勾选的数据
-                        align: "center", //文本对齐方式
-                        pageNo: 1,
-                        pageSize: 20,
-                        total: 0,
-                        isHigh: false,
-                        isLoading: true, //是否开启loading
-                        loadShow: false //loading控制
-                    },
-                    tableData: [],
+            tableConfig:{
+                //操作按钮配置
+                toolbarConfig: [{
+                    disabled: false,
+                    method: "add",
+                    type:'primary',
+                    name: "开户"
+                },{
+                    disabled: true,
+                    method: "remove",
+                    name: "删除"
+                }
+                ],
+                //表格字段配置
+                colConfig: [{
+                    field: "fileName",
+                    label: "文件名称",
+                    type: "text",
                 },
+                    { 
+                    field: "filePath",
+                    label: "文件后缀",
+                    type: "text",
+                },
+                {
+                    field: "modifyTime",
+                    label: "上传时间",
+                    type: "text",
+                },
+                {
+                    field: "fileType",
+                    label: "上传人",
+                    type: "text",
+                },
+                {
+                    field: "fileSize",
+                    label: "文件大小(KB)",
+                    type: "text",
+                },
+                {
+                    field: "查看详情",
+                    label: "操作",
+                    type: "btnText",
+                }
+                ],
+                isSelection: true, //是否可选
+                isPage: true, //是否分页
+                currentSelectArr: [], //当前勾选的数据
+                align: "center", //文本对齐方式
+                pageNum: 1,
+                pageSize: 10,
+                total: 0,
+                isHigh: false,
+                isLoading: true, //是否开启loading
+                loadShow: false //loading控制
+            },
+            tableData: []
+
         }
     },
     mounted(){
@@ -134,86 +125,7 @@ export default {
     },
     methods:{
         init(){
-            this.formSearch={ depart:"", person:"" }
-            this.$set(this.table,"tableData",[]);
-            this.$set(this.table.tableConfig,"pageNo",1);
-            this.getOrgList()
             this.getOrgPersonPermission();
-        },
-        getOrgList(){
-            permissionRoleListOrg({Vue:this,params:{}}).then(res=>{
-                let temp=[];
-                if(res.model){
-                    for(let item of res.model){
-                        temp.push({...item,label:item.orgName,value:item.id})
-                    }
-                    this.$set(this.formSearchConfig[0],"dropDown",temp);
-                }
-            })
-        },
-        formItemFocus(item,i){
-            switch (i) {
-                case 1:
-                    {
-                        if(item.dropDown.length==0){
-                            if(this.formSearch[this.formSearchConfig[0].key]==""){
-                                this.$message.error("请先选择部门");
-                            }else{                                
-                                this.$message.error("该部门下未绑定人员!");
-                            }
-                        }
-                    }
-                    break;
-            
-                default:
-                    break;
-            }
-        },
-        formItemChange(item,i){
-            switch (i) {
-                case 0:
-                    {
-                        setTimeout(() => {
-                            this.getOrgPerson(this.formSearch[item.key]);
-                        }, 30);
-                    }
-                    break;
-                case 1:
-                    {
-                        setTimeout(() => {
-                            this.getOrgPersonPermission();
-                        }, 30);
-                    }   
-                break;         
-                default:
-                    break;
-            }
-        },
-        getOrgPerson(orgId){
-            if(null==orgId || (orgId== undefined) || (orgId<1)){
-                console.log("非法的部门ID！")
-                this.$set(this.formSearchConfig,"dropDown",[]);
-            }else{
-                let params ={orgId:orgId}
-                permissionRoleListUser({Vue:this,params:params}).then(res=>{
-                    let temp=[];
-                    if(res.model){
-                        for (let item of res.model){
-                            temp.push({...item,label:item.name,value:item.id})
-                        }
-                    }
-                    this.$set(this.formSearchConfig[1],"dropDown",temp);
-                    if(temp.length>0){
-                        setTimeout(() => {
-                            this.$set(this.formSearch,"person",temp[0].value);
-                            this.getOrgPersonPermission();
-                        }, 30);
-                    }else{
-                        this.$set(this.table,"tableData",[]);
-                    }
-                })
-             
-            }
         },
         setAttr(data){
             for(let attr in data){
@@ -221,24 +133,17 @@ export default {
             }
             return data;
         },
-        resetSearch(){
-            for(let attr in this.formSearch){
-                this.$set(this.formSearch,attr,"");
-            }
-        },
-        resetAndSearch(){
-            this.resetSearch();
-            this.getOrgPersonPermission();
-        },
         getOrgPersonPermission(){ //查询文件列表
-            let params = {pageSize:this.table.tableConfig.pageSize,pageNo:this.table.tableConfig.pageNo,filePath: this.formSearch.filePath, fileName: this.formSearch.fileName}
+            let params = {pageSize:this.tableConfig.pageSize,pageNo:this.tableConfig.pageNum,filePath: this.formSearch.filePath, fileName: this.formSearch.fileName}
             params=this.setAttr(params);
             queryFileList({Vue:this,params:params}).then(res=>{  
                 let temp=[];
+                this.tableData = res.list;
+                // debugger;
                 // if(res.model && res.model.items){
                     // this.$set(this.table.tableConfig,"total",res.model.numRows)
                     // this.$set(this.table.tableConfig,"loadShow",false);
-                    this.$set(this.table,"tableData",res.list);
+                    // this.$set(this.table,"tableData",res.list);
                 // }
                 //  debugger;
             })
@@ -262,7 +167,7 @@ export default {
     }
     .search{
         position: absolute;
-        top:30px;
+        top:10px;
         z-index: 999;
     }
     .el-button{

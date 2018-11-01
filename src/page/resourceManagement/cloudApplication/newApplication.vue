@@ -36,7 +36,7 @@
 				<el-table-column resizable show-overflow-tooltip property="authUrl" align="center" label="行业领域" width="120" />
 				<el-table-column resizable show-overflow-tooltip property="spaceSize" align="center" label="应用编码" width="120" />
 				<el-table-column resizable show-overflow-tooltip property="releaseUrl" align="center" label="应用名称" width="120" />
-				<el-table-column resizable show-overflow-tooltip property="version" align="center" label="版本号" />
+				<el-table-column resizable show-overflow-tooltip property="version" align="center" label="版本号" width="120"/>
 				<el-table-column resizable show-overflow-tooltip property="type" align="center" label="支持云存储" width="120" />
 				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="支持短信" width="120" />
 				<el-table-column label="操作" align="center" width="300">
@@ -307,9 +307,11 @@
 						list.value = list.value;		
 						this.classifiedConfig[1].options.push(list); //行业领域
 					})
+					this.cloudApplication(); //云应用列表
 				}
 				if(index == 1){
 					this.queryParam.industry= option.value;
+					this.cloudApplication(); //云应用列表
 				}
 			},
 			doSearch() { //获取分页栏标签

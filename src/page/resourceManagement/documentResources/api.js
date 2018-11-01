@@ -4,7 +4,7 @@ export let treestructure = (data, self) => {  //点击标题父级文件夹
     debugger;
     return http.fetchGet('/folders/parents', data, self)
 }
-
+ 
 export let warehouseGrid = (data, self) => {
     return http.fetchPost('/warehouse/grid', data, self)
 }

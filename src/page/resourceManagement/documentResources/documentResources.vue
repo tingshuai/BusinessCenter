@@ -175,7 +175,7 @@ export default {
                                 }
                             }
                         },
-                    qwDialog:{
+                    qwDialog:{ 
                             title:"新增数据仓库模型",
                             titleStyle:"background:#FFF;",
                             dialogVisible:false,

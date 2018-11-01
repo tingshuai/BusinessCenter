@@ -1,5 +1,5 @@
 //云应用    ...
-<template>
+<template> 
 	<div class="market-mgr">
 		<classified-searchs :config="classifiedConfig" :selected="selectedItems" @doSelectHandler="doClickHandler" />
 		<toolbars class="custom-toolbar">
@@ -36,7 +36,7 @@
 				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="行业领域" width="100" />
 				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="应用专属" width="100" />
 				<el-table-column resizable show-overflow-tooltip property="code" align="center" label="接口编码" width="100" />
-				<el-table-column resizable show-overflow-tooltip property="version" align="center" label="接口名称" />
+				<el-table-column resizable show-overflow-tooltip property="version" align="center" label="接口名称" width="100" />
 				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="版本号" width="100" />
 				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="接口地址" width="120" />
 				<el-table-column resizable show-overflow-tooltip property="industry" align="center" label="可见设置" width="120" />
@@ -304,31 +304,61 @@
 					this.toastAddData.dialogVisible = false;
 					})
             },
-			doClickHandler(index, option) { //分页栏标签
-			    debugger;
-				if(index == 0){
-					this.classifiedConfig[1].options=  [];
-					this.queryParam.appType= option.value;
-					let mar = option.children;
-					mar.forEach(list =>  {
-						list.label = list.key;
-						list.value = list.value;		
-						this.classifiedConfig[1].options.push(list); //行业领域
-					})
-				}
-				if(index == 1){
-					this.classifiedConfig[2].options=  [];
-					this.queryParam.industry= option.value;
-					let mars = option.children;
-					mars.forEach(lists =>  {
-						lists.label = lists.key;
-						lists.value = lists.value;		
-						this.classifiedConfig[2].options.push(lists); //行业领域
-						// debugger;
-					})
-				}
-				if(index == 2){
-                    this.queryParam.appId= option.value;
+			doClickHandler(index, option) { //分页搜索点击事件
+				// if(index == 0){  //点击的层级
+				// 	this.classifiedConfig[1].options=  [];
+				// 	this.queryParam.appType= option.value;
+				// 	let mar = option.children;
+				// 	mar.forEach(list =>  {
+				// 		list.label = list.key;
+				// 		list.value = list.value;		
+				// 		this.classifiedConfig[1].options.push(list); //行业领域
+				// 	})
+				// }
+				// if(index == 1){
+				// 	this.classifiedConfig[2].options=  [];
+				// 	this.queryParam.industry= option.value;
+				// 	let mars = option.children;
+				// 	mars.forEach(lists =>  {
+				// 		lists.label = lists.key;
+				// 		lists.value = lists.value;		
+				// 		this.classifiedConfig[2].options.push(lists); //行业领域
+				// 		// debugger;
+				// 	})
+				// }
+				// if(index == 2){
+                //     this.queryParam.appId= option.value;
+				// }
+				switch(index){//点击的层级
+					case 0:{
+					    this.classifiedConfig[1].options=  [];
+						this.queryParam.appType= option.value;
+						let mar = option.children;
+						mar.forEach(list =>  {
+							list.label = list.key;
+							list.value = list.value;		
+							this.classifiedConfig[1].options.push(list); //接口分类
+						})
+						this.cloudApplication(); //云应用列表
+						break;
+					};
+					case 1:{
+						this.classifiedConfig[2].options=  [];
+						this.queryParam.industry= option.value;
+						let mars = option.children;
+						mars.forEach(lists =>  {
+							lists.label = lists.key;
+							lists.value = lists.value;		
+							this.classifiedConfig[2].options.push(lists); //行业领域
+						})
+						this.cloudApplication(); //云应用列表
+						break;
+					};
+					case 2:{					
+						this.queryParam.appId= option.value;
+						this.cloudApplication(); //云应用列表
+						break;
+					}
 				}
 			},
 			doSearch() { //获取分页栏标签
@@ -349,9 +379,8 @@
 							this.selectedItems[1].value = this.classifiedConfig[0].options[0].value;
 							this.selectedItems[2].value = this.classifiedConfig[0].options[0].value;
 							this.doClickHandler(0, this.classifiedConfig[0].options[0])
-							this.doClickHandler(1, this.classifiedConfig[0].options[0])
-							this.doClickHandler(2, this.classifiedConfig[0].options[0])
-							// debugger;
+							this.doClickHandler(1, this.classifiedConfig[1].options[0])
+							this.doClickHandler(2, this.classifiedConfig[2].options[0])
 						}
 
 					}
@@ -412,7 +441,7 @@
 				return data;
 			},
 			cloudApplication(page){ //获取云应用列表
-				let params = {pageSize:this.page.pageSize,pageNo:this.page.pageNo,appName: this.queryParam.appName,isAble:this.queryParam.isAble,appType:this.queryParam.appType,industry:this.queryParam.industry,appId:this.queryParam.appid}
+				let params = {pageSize:this.page.pageSize,pageNo:this.page.pageNo,appName: this.queryParam.appName,isAble:this.queryParam.isAble,appType:this.queryParam.appType,industry:this.queryParam.industry,appId:this.queryParam.appId}
 				params=this.setAttr(params);
 				cloudCompanyList({Vue:this,params:params}).then(res=>{  
 					this.tableData = res.list;

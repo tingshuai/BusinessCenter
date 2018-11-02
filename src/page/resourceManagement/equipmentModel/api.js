@@ -1,8 +1,8 @@
 import http from "api/base.js"
 
 //设备中心--设备模型
-export let dataDefineIndustryList = (data, self) => {
-    return http.fetchPost('/data-define/listByDirCode', data, self)
+export let dataDefineIndustryList = (data, self) => { //获取标签数据
+    return http.fetchGet('/dev-models/tags', data, self)
 }
 
 export let devModelList = (data, self) => {

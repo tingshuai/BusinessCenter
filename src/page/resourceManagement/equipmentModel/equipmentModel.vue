@@ -1,6 +1,34 @@
 <template>
 	<div>
 		<classified-searchs :config="classifiedConfig" :selected="selectedItems" @doSelectHandler="doClickHandler" />
+
+        <toolbars class="custom-toolbarsss">
+			<span slot="left">
+				<el-radio-group size="small" v-model="queryParam.isAble">
+					<el-radio-button label="">全部</el-radio-button>
+					<el-radio-button label="已启用">只显示启用</el-radio-button>
+					<el-radio-button label="已停用">只显示停用</el-radio-button>
+				</el-radio-group>
+			</span> 
+			<span slot="right">
+				<el-button icon="el-icon-plus" size="small" style="width: 100px;" type="primary" v-show="!editModel" @click="doAdd">新增模型</el-button>
+				<el-button icon="el-icon-edit" size="small" style="width: 80px;" :disabled="productClassForm==null||productClassForm.isAble=='已启用'"
+				 v-show="!editModel" @click="editModel = true;">编辑</el-button>
+				<el-button icon="el-icon-delete" size="small" style="width: 80px;" :disabled="productClassForm==null||productClassForm.isAble=='已启用'"
+				 v-show="!editModel" @click="doDelete">删除</el-button>
+				<el-button icon="el-icon-setting" size="small" style="width: 80px;" :disabled="productClassForm==null" v-show="!editModel"
+				 @click="doAbleOrDisable(productClassForm.isAble==null?'启/停用':productClassForm.isAble=='已停用'?'启用':'停用')">
+					{{productClassForm.isAble==null?'启/停用':productClassForm.isAble=='已停用'?'启用':'停用'}}
+				</el-button>
+				<el-button icon="el-icon-success" size="small" style="width: 80px;" type="primary" v-show="editModel" @click="doSave">保存</el-button>
+				<el-button icon="el-icon-back" size="small" style="width: 80px;" type="danger" v-show="editModel" @click="editModel=false;">返回</el-button>
+			</span>
+		</toolbars>
+
+
+
+
+
 		<el-tabs v-model="activeName" class="model-info" @tab-click="doTabClick">
 			<el-tab-pane label="模型概况" name="model-info">
 				<model-info :form="modelForm"/>
@@ -19,7 +47,7 @@
 			</el-tab-pane>
 		</el-tabs>
 	</div>
-</template>
+</template> 
 <script>
 	import ModelInfo from 'components/dev-center/dev-model/model-info.vue'
 	import ModelAttr from 'components/dev-center/dev-model/model-attr.vue'
@@ -28,7 +56,7 @@
 	import ModelResoluve from 'components/dev-center/dev-model/model-resoluve.vue'
 	
 	import {
-        dataDefineIndustryList,
+        dataDefineIndustryList, //获取标签数据
         devModelList
     } from "./api.js"
 	//模拟数据
@@ -42,6 +70,10 @@
 		},
 		data(){
 			return {
+				editModel: false,
+                queryParam: {
+					isAble: ''
+				},
 				activeName:'model-info',
 				//筛选数据
 				classifiedConfig: [{
@@ -102,6 +134,18 @@
 			}
 		},
 		methods:{
+			doAdd() {
+				alert('3333333333333')
+			},
+			productClassForm(){
+				alert('66666666666666')
+			},
+			doDelete(){
+				alert("8888888888888")
+			},
+			doSave(){
+				alert("9999999999999999")
+			},
 			doTabClick(){
 				if(this.activeName=='model-attr')
 					this.$refs.modelAttr.doSearch(this.modelForm.id);
@@ -125,55 +169,69 @@
 				this.modelMap = new Map();
 				
 
-				 dataDefineIndustryList({Vue:this,params:{
+				 dataDefineIndustryList({Vue:this,params:{ //获取标签数据
 					 dirCode:'industry'
 				 }}).then(res=>{
-					if(res.result){
-						this.industryArr = res.model;
+					if(res.code){
+						this.industryArr = res.list;
 						this.industryArr.forEach(industry => {
-							industry.label = industry.code;
-							industry.value = industry.code;
+							industry.label = industry.key;
+							industry.value = industry.value;
 							this.classifiedConfig[0].options.push(industry);
+							// debugger;
 						});
 						
-						devModelList({Vue:this,params:{
+						dataDefineIndustryList({Vue:this,params:{
 						}}).then(res=>{
-							if(res.result){
-								let modelList = res.model;
+							if(res.code){
+								let modelList = res.list;
 								modelList.forEach(model=>{
-									let industryTempArr =model.industry.split(',');
+									// debugger;
+									// let industryTempArr =model.children.split(',');
+									let industryTempArr =model.children;
 									industryTempArr.forEach(industry=>{
-										if(this.industryMap.has(industry))
-											this.industryMap.get(industry).push(model.devClass);
-										else
-											this.industryMap.set(industry,[model.devClass]);
+
+
+									    // industry.label = industry.key;
+										// industry.value = industry.value;
+										// this.classifiedConfig[2].options.push(industry);
+                                        //  debugger;
+
+										if(this.industryMap.has(industry)){
+											this.industryMap.get(industry).push(industry.key);
+											// debugger;
+										}else{
+											this.industryMap.set(industry,[industry.key]);
+											// debugger;
+										}
 											
-										if(this.devClassMap.has(industry+'-'+model.devClass))
-											this.devClassMap.get(industry+'-'+model.devClass).push(model.brand);
-										else
-											this.devClassMap.set(industry+'-'+model.devClass,[model.brand]);
+											
+										// if(this.devClassMap.has(industry+'-'+model.devClass))
+										// 	this.devClassMap.get(industry+'-'+model.devClass).push(model.brand);
+										// else
+										// 	this.devClassMap.set(industry+'-'+model.devClass,[model.brand]);
 										
-										if(this.brandMap.has(industry+'-'+model.devClass+'-'+model.brand))
-											this.brandMap.get(industry+'-'+model.devClass+'-'+model.brand).push(model.spec);
-										else
-											this.brandMap.set(industry+'-'+model.devClass+'-'+model.brand,[model.spec]);
+										// if(this.brandMap.has(industry+'-'+model.devClass+'-'+model.brand))
+										// 	this.brandMap.get(industry+'-'+model.devClass+'-'+model.brand).push(model.spec);
+										// else
+										// 	this.brandMap.set(industry+'-'+model.devClass+'-'+model.brand,[model.spec]);
 											
-										if(this.specMap.has(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec))
-											this.specMap.get(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec).push(model.productDate);
-										else
-											this.specMap.set(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec,[model.productDate]);
+										// if(this.specMap.has(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec))
+										// 	this.specMap.get(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec).push(model.productDate);
+										// else
+										// 	this.specMap.set(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec,[model.productDate]);
 											
-										if(this.productDateMap.has(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate))
-											this.productDateMap.get(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate).push(model.plcBrand);
-										else
-											this.productDateMap.set(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate,[model.plcBrand]);
+										// if(this.productDateMap.has(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate))
+										// 	this.productDateMap.get(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate).push(model.plcBrand);
+										// else
+										// 	this.productDateMap.set(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate,[model.plcBrand]);
 											
-										if(this.plcBrandMap.has(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate+'-'+model.plcBrand))
-											this.plcBrandMap.get(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate+'-'+model.plcBrand).push(model.plcSpec);
-										else
-											this.plcBrandMap.set(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate+'-'+model.plcBrand,[model.plcSpec]);
+										// if(this.plcBrandMap.has(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate+'-'+model.plcBrand))
+										// 	this.plcBrandMap.get(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate+'-'+model.plcBrand).push(model.plcSpec);
+										// else
+										// 	this.plcBrandMap.set(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate+'-'+model.plcBrand,[model.plcSpec]);
 									
-										this.modelMap.set(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate+'-'+model.plcBrand+'-'+model.plcSpec,model);
+										// this.modelMap.set(industry+'-'+model.devClass+'-'+model.brand+'-'+model.spec+'-'+model.productDate+'-'+model.plcBrand+'-'+model.plcSpec,model);
 									})
 								})
 								//默认选中第一个
@@ -186,6 +244,7 @@
 			},
 			//分类搜索 点击事件 ---无须改动
 			doClickHandler(index, option){
+				// debugger;
 				this.modelForm = {};
 				if (index == 0) {
 					this.classifiedConfig[1].options.splice(0, this.classifiedConfig[1].options.length);
@@ -196,8 +255,10 @@
 					this.classifiedConfig[6].options.splice(0, this.classifiedConfig[6].options.length);
 					
 					let devClassArr = this.industryMap.get(option.value);
+					debugger;
 					if (devClassArr && devClassArr.length > 0) {
 						devClassArr.forEach(devClass => {
+							debugger;
 							let temp={};
 							temp.label = devClass;
 							temp.value = option.value+'-'+devClass;
@@ -302,5 +363,8 @@
 	}
 </script>
 <style lang="less">
-	
+	.custom-toolbarsss {
+		margin: 10px 0px;
+		background:white;
+	}
 </style>

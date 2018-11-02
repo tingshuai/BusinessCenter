@@ -16,8 +16,38 @@
     components:{
       formMsg:{
             render: function (createElement) {
-                if( configer.colum == "alone" ){//单列............
-                    let _col = createElement("el-form-item")
+                let _col;
+                function createControlBar(key){
+                  switch (key) {
+                    case "input":{
+                      return createElement("el-input",{
+
+                      })
+                    }
+                    case "select":{
+                      return createElement("el-select",{
+                        
+                      })
+                    }
+                    case "radioGroup":{
+                      return createElement("el-radio-group",{
+                        
+                      })
+                    }
+                    case "checkboxGroup":{
+                      return createElement("el-checkbox-group",{
+                        
+                      })
+                    }                       
+                    default:
+                      break;
+                  }
+                }
+                if( this.configer.colum == "alone" ){//单列............
+                    _col = createElement(
+                      "el-form-item",
+                      createControlBar
+                    )
                 }else{//双列...........
 
                 }

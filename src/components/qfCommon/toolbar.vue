@@ -14,8 +14,8 @@
 <style type="text/css" scoped lang="less">
 .toolbar {
   height: 60px;
-	background: #FFF;
-	box-shadow: 1px 1px 15px #e6e6e6;
+	// background: #FFF;
+	// box-shadow: 1px 1px 15px #e6e6e6;
   line-height: 60px;
   // .el-button {
   //   background: #e6e6e6;

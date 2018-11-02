@@ -4,6 +4,7 @@
     <form-msg :configer="config">琼飞</form-msg>
   </el-dialog>
 </template>
+
 <script>
   export default {
     props:{

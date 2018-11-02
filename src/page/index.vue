@@ -73,15 +73,15 @@ var vueObj= {
             link:'',
             childrens:[
               {
-                id: 12,
-                title:'单位组',
-                link:'/unitGroup'
-              },
-              {
                 id: 11,
                 title:'经营产品',
                 link:'/operatingProduct',
                 childrens:[]
+              },
+              {
+                id: 12,
+                title:'单位组',
+                link:'/unitGroup'
               },
               {
                 id: 13,

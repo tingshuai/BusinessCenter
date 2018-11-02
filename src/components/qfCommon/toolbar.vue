@@ -1,4 +1,4 @@
-//按钮组
+<!--按钮组-->
 <template>
 	<div class="toolbar">
 		<div class="clear">
@@ -24,9 +24,7 @@
   // }
   .ltool {
      float: left;
-    
     	margin-left: 10px;
-    
   }
   .rtool {
   	float: right;

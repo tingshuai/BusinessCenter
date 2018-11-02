@@ -13,6 +13,7 @@ import myToast from './components/Toast.vue' //弹窗
 
 import toolbars from 'components/qfCommon/toolbar.vue' //工具栏
 import ClassifiedSearch from 'components/qfCommon/ClassifiedSearch.vue' //分页栏
+import formPage from 'components/qfCommon/form.vue' //分页栏
 import ClassifiedSearchs from 'components/zyxCommon/ClassifiedSearch.vue' //分页栏
 import Loading from 'components/zyxCommon/Loading.vue' //loading
 import page from './components/theme/page.vue'
@@ -33,6 +34,7 @@ Vue.use(Element);
 Vue.component('Page',page)
 Vue.component('ClassifiedSearch', ClassifiedSearch)
 Vue.component('toolbar', toolbar)
+Vue.component('formPage', formPage)
 
 new Vue({
   el: '#qwApp',

@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import api from 'api/treetest.js'
+import api from '../../api/treetest.js'
 export default{
 	name: 'slot-tree',
 	data(){

@@ -41,7 +41,6 @@
                             :style="{width: item.controlWidth? item.controlWidth: (config.controlWidth? config.controlWidth: '')}"
                             :multiple="item.multiple"
                             :size="item.size"
-                            :clearable="item.clearable"
                             :allow-create="item.allowCreate"
                             :disabled="item.disabled"
                             :filterable="item.filterable"
@@ -170,9 +169,6 @@
                         :type="item.dateType?item.dateType : 'date'"
                         :value-format="item.valueFormat"
                         :placeholder="item.placeholder?item.placeholder:'选择日期时间'"
-                        :range-separator="item.rangeSeparator? item.rangeSeparator :'至'"
-                        :start-placeholder="item.startPlaceholder? item.startPlaceholder :'开始日期'"
-                        :end-placeholder="item.endPlaceholder? item.endPlaceholder :'结束日期'"
                         @input="formItemInput(item)"
                         @focus="formItemFocus(item)"
                         @blur="formItemBlur(item)"
@@ -180,12 +176,12 @@
                     </el-date-picker>
                 </el-form-item>
                 <!-- labelInfo用于查看详情或展示 -->                
-                <el-form-item class="labelInfo" v-if="item.type=='labelInfo'"
+                <el-form-item v-if="item.type=='labelInfo'"
                     :label="item.name"
                     :prop="item.key"
                     :rules="item.rules? item.rules : [{required:false}]"
                     :style="'width:' + (item.width? item.width : config.itemWidth)+'px;'+ (item.formItemStyle? item.formItemStyle :'')">
-                   <span style="color:#333;" class="labelInfoVal" :style="{width: item.controlWidth? item.controlWidth: (config.controlWidth? config.controlWidth: '')}">{{'function'==typeof(item.transVal)? item.transVal(config.formData[item.key]) : config.formData[item.key]}}</span>
+                   <span style="color:#333;" :style="{width: item.controlWidth? item.controlWidth: (config.controlWidth? config.controlWidth: '')}">{{'function'==typeof(item.transVal)? item.transVal(config.formData[item.key]) : config.formData[item.key]}}</span>
                 </el-form-item>
                 <el-form-item v-if="item.type=='slider'"
                     :label="item.name"
@@ -472,7 +468,7 @@ const config2={
                     }
                 }
             }
-import http from 'api/base.js'
+import http from '../../api/base.js'
 export default {
     props:{
         formName:{
@@ -675,11 +671,6 @@ export default {
          }
          .el-badge{
              margin-left: 20px;
-         }
-         .labelInfoVal{
-             display: inline-block;
-             width: 100px;
-             overflow: hidden;
          }
     }    
 </style>

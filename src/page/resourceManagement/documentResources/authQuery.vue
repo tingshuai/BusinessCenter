@@ -1,4 +1,4 @@
-<template>
+<template> 
 <div class="authQuery">
     <!-- 搜索 -->
     <div class="search">   
@@ -9,22 +9,21 @@
                     <el-option v-for="(lbl,j) in item.dropDown" :label="lbl.label" :key="j" :value="lbl.value"></el-option>
                 </el-select>
             </el-form-item>
-            <div class="el-form-item" style="padding-top:8px;">
+            <div class="el-form-item" style="padding-top:3px;">
                 <el-button type="primary" size="mini" @click="getOrgPersonPermission">查询</el-button>       
-                <el-button size="mini">清空</el-button> 
+                <el-button size="mini" @click="empty">清空</el-button> 
             </div>      
         </el-form>
     </div>
     <!-- 表格 -->
-    <mytable style="margin-top:30px;" :tableConfig="tableConfig" :tableData="tableData" @sizeChange="sizeChange" @pageChange="pageChange"></mytable>
+    <mytable style="margin-top:-20px;" :tableConfig="tableConfig" :tableData="tableData" @sizeChange="sizeChange" @pageChange="pageChange" @add="add" @remove="remove"></mytable>
 </div>
 </template>
 <script>
 import {
-    permissionRoleListOrg,
-    permissionRoleListUser,
-    queryFileList //查询文件列表
-
+    queryFileList, //查询文件列表
+    batchUpload, //批量上传
+    batchDeleting, //批量删除
 } from './api.js';
 import mytable from "components/zyxCommon/Table.vue" 
 export default {
@@ -66,14 +65,14 @@ export default {
                     disabled: false,
                     method: "add",
                     type:'primary',
-                    name: "开户"
+                    name: "批量上传"
                 },{
                     disabled: true,
                     method: "remove",
-                    name: "删除"
+                    name: "批量删除"
                 }
                 ],
-                //表格字段配置
+                //表格字段配置 
                 colConfig: [{
                     field: "fileName",
                     label: "文件名称",
@@ -124,7 +123,92 @@ export default {
         this.init();
     },
     methods:{
-        init(){
+        empty(){
+            this.formSearch ={};
+        },
+        add(){ //批量上传
+            let len = this.tableConfig.currentSelectArr.length - 1;
+            let fileId = "";
+            //判断删除的size是否等于当前页的数量
+            this.tableConfig.currentSelectArr.forEach((item, index) => {    
+            fileId += len === index ? item.id : item.id + ",";
+            fileId = fileId.split(',')
+            });
+            let flag = this.tableData.length === this.tableConfig.currentSelectArr.length;
+            this.$confirm("确定上传?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+            })
+            .then(() => {
+                batchUpload({
+                Vue: this,
+                params: {
+                    fileId,
+                }
+                }).then(data => {
+                this.$message({
+                    message: "上传成功！",
+                    type: "success"
+                });
+                //回到上一页
+                if (flag) {
+                    this.tableConfig.pageNo +=
+                    this.tableConfig.pageNo - 1 >= 1 ? -1 : 0;
+                }
+                this.getDate(this.search.searchData); //刷新数据
+                });
+            })
+            .catch(() => {
+                this.$message({
+                type: "info",
+                message: "已取消上传"
+                });
+            });
+        },
+        remove(){ //批量删除
+            // debugger;
+            let len = this.tableConfig.currentSelectArr.length - 1;
+            let fileId = "";
+            //判断删除的size是否等于当前页的数量
+            this.tableConfig.currentSelectArr.forEach((item, index) => {    
+            fileId += len === index ? item.id : item.id + ",";
+            fileId = fileId.split(',')
+            });
+            let flag =
+            this.tableData.length === this.tableConfig.currentSelectArr.length;
+            this.$confirm("确定删除?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+            })
+            .then(() => {
+                batchDeleting({
+                Vue: this,
+                params: {
+                    fileId,
+                }
+                }).then(data => {
+                this.$message({
+                    message: "删除成功！",
+                    type: "success"
+                });
+                //回到上一页
+                if (flag) {
+                    this.tableConfig.pageNo +=
+                    this.tableConfig.pageNo - 1 >= 1 ? -1 : 0;
+                }
+                this.getDate(this.search.searchData); //刷新数据
+                });
+            })
+            .catch(() => {
+                this.$message({
+                type: "info",
+                message: "已取消删除"
+                });
+            });
+        },
+        init(){ 
             this.getOrgPersonPermission();
         },
         setAttr(data){
@@ -136,16 +220,8 @@ export default {
         getOrgPersonPermission(){ //查询文件列表
             let params = {pageSize:this.tableConfig.pageSize,pageNo:this.tableConfig.pageNum,filePath: this.formSearch.filePath, fileName: this.formSearch.fileName}
             params=this.setAttr(params);
-            queryFileList({Vue:this,params:params}).then(res=>{  
-                let temp=[];
+            queryFileList({Vue:this,params:params}).then(res=>{ 
                 this.tableData = res.list;
-                // debugger;
-                // if(res.model && res.model.items){
-                    // this.$set(this.table.tableConfig,"total",res.model.numRows)
-                    // this.$set(this.table.tableConfig,"loadShow",false);
-                    // this.$set(this.table,"tableData",res.list);
-                // }
-                //  debugger;
             })
         },
         pageChange(){
@@ -153,6 +229,17 @@ export default {
         },
         sizeChange(){
             this.getOrgPersonPermission();
+        },
+    },
+    watch: { //监听按钮
+        'tableConfig.currentSelectArr': function () {
+            if (this.tableConfig.currentSelectArr.length === 0) {
+                this.tableConfig.toolbarConfig[0].disabled = true
+                this.tableConfig.toolbarConfig[1].disabled = true
+            } else {
+                this.tableConfig.toolbarConfig[0].disabled = false
+                this.tableConfig.toolbarConfig[1].disabled = false
+            }
         }
     }
 }

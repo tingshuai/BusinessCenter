@@ -18,7 +18,7 @@
 <!-- VUE饿了么树形控件添加增删改功能按钮 -->
 <script>
 import TreeRender from './tree_render'
-import api from 'api/treetest.js'
+import api from '../../api/treetest.js'
 
   export default{
     name: 'tree',

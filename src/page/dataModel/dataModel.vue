@@ -2,16 +2,6 @@
 <div class="qwCommonPage">
 <modelTree ref="modelTree" :config="treeConfig" @delNode="BeforNodeDelete" @nodeLabelClicked="nodeLabelClicked"></modelTree>
 <div class="rbox">
-
-    <div class="contentBox">
-        <el-row>
-            <authQuery ref="authQuery" class="contentBox_s"></authQuery>
-        </el-row>  
-    </div>
-
-
-
-
     <!-- 过滤条件 -->
     <!-- <div class="filterBlock">
         <div class="filterGroup" v-for="(item,i) in configFilter" :key="i" v-show="(i==0)|| (i>0&&filterGroupConfig.show)" >
@@ -114,7 +104,6 @@
 import qwTree from "components/qwform/qwtree.vue"
 import qwForm from "components/qwform/qwform.vue"
 import qwModalForm from "components/qwform/qwMoalForm.vue"
-import authQuery from "./authQuery.vue" //表格
 import modelTree from "common/modelTree.vue"
 
 import {timestampToTime} from "./filter.js"
@@ -122,7 +111,7 @@ import {mapState} from "vuex"
 import {
     warehouseList,
     warehouseGrid,
-    warehouseAdd, //保存
+    warehouseAdd,
     warehouseEdit,
     warehouseAble,
     warehouseDel,
@@ -147,7 +136,6 @@ export default {
         qwForm,
         qwModalForm,
         modelTree,
-        authQuery, //表格
     },
     computed:{
         ...mapState({
@@ -202,11 +190,11 @@ export default {
                     maxLevel:1,
                     curNode:null,
                     evtNode:null,
-                    treeData:[ //父级文件夹
+                    treeData:[
                         {
                         id: 0,
                         isEdit:false,
-                        label: '所有文件夹',
+                        label: '所有仓库',
                         children:[]
                         }
                     ],
@@ -921,7 +909,6 @@ export default {
         },
         //点击标题
         nodeLabelClicked(node,data){
-            // debugger;
             this.treeConfig.curNode=node;
             let params = {warehouseId: node.data.id}
             dataModelList({Vue:this,params:params}).then(res=>{
@@ -1114,100 +1101,12 @@ export default {
             this.configFilter.curMod=filterMod[i];
         },
 
- 
+
     }
 }
 </script>
 <style lang="less">
 @import url("~style/pageCommon.less");
-.qwCommonPage{
-   .contentBox{
-        background:#FFF;
-    }
-    .contentBox_s{
-        width:95%;
-        margin:0 auto
-    }
-    .groupItem{
-        box-sizing: border-box;
-        border: 1px solid #e5e5e5;
-        min-height: 100px;
-        margin-top: 32px;
-        position: relative;        
-        padding: 42px 0;
-        .gr_title{
-            color: #333;
-            position: absolute;
-            left: 24px;
-            font-size: 18px;
-            line-height: 18px;
-            top: -10px;
-            margin: 0;
-            padding: 0;
-            background: #FFF;
-        }
-        .qwrow +.qwrow{
-            margin-top: 30px;
-        }
-        .qwrow{
-            width: 100%;
-            box-sizing: border-box;
-            line-height: 32px;
-            .labelItem{
-                display: inline-block;
-                .lbl{
-                    display: inline-block;
-                    width: 150px;
-                    text-align: right;
-                    font-size: 14px;
-                    color: #666;
-                    line-height: 32px;
-                }
-                .val{
-                    font-size: 14px;
-                    color: #333;
-                    line-height: 32px;
-                }
-            }
-        }
-    }
-    .actionbox_info .el-checkbox__input.is-disabled+span.el-checkbox__label{
-        color: #333;
-        cursor: pointer;
-    }
-    .actionbox_info .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner{
-        border-color: #666;
-    } .actionbox_info .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner:after{
-        border-color: #555;
-    }
-    .info .el-tree-node__expand-icon.expanded {
-        -webkit-transform: rotate(-90deg);
-        transform: rotate(-90deg);
-    }
-    .info .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner{
-        background-color: #409EFF;
-        border-color: #409EFF;
-        color: #FFF;
-    }
-    .info .el-icon-caret-right{
-        color: #409EFF;
-    }
-    .info .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after{
-        border-color: #FFF;
-    }
-    .groupRbox{
-        box-sizing: border-box;
-        padding-left: 24px;
-    }
-    .qwerror{
-        margin-left: 10px;
-        font-size: 14px;
-        position: absolute;
-        left: 100%;
-        width: 240px;
-        top:-4px;
-        color: rgb(245, 108, 108);
-        line-height: 32px;
-    }
-}
 </style>
+
+

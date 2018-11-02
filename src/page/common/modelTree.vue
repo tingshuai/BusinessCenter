@@ -18,11 +18,8 @@
         :filter-node-method="filterNode"
         :expand-on-click-node="false">
         <span class="custom-tree-node" style="display:block;" slot-scope="{ node, data }">            
-            <span style="display:inline;" >
-                <i v-if="(!node.loading)" @click="changeExpended(node,data)" :class="{'el-icon-caret-right':!node.expanded,'el-icon-caret-top':node.expanded,'el-icon-loading1': node.loading}"></i>
-                <label class="nodeLabel" style="cursor:pointer;" :ref="'qwModelTreeLabel_'+data.id"  :class="(config.curNode && (node.id==config.curNode.id))? 'curNode':''" @click="nodeLabelClicked(node,data)">{{ node.label }}</label></span>
-                <!-- <span>{{showMenus}}</span> -->
-            <span v-if="showMenus">
+            <span style="display:inline;" ><i v-if="(!node.loading)" @click="changeExpended(node,data)" :class="{'el-icon-caret-right':!node.expanded,'el-icon-caret-top':node.expanded,'el-icon-loading1': node.loading}"></i><label style="cursor:pointer;" :ref="'qwModelTreeLabel_'+data.id"  :class="(config.curNode && (node.id==config.curNode.id))? 'curNode':''" @click="nodeLabelClicked(node,data)">{{ node.label }}</label></span>
+            <span>
                 <el-button type="text" size="mini" @click.stop="() => append(data,node)">
                     <img class="tree_after_icon add" :src="emptySrc" alt="添加">
                 </el-button>              
@@ -37,7 +34,7 @@
                 </el-button>
                 <el-button v-if="!data.isAble&&(data.id>0)" type="text" @click.stop="setAble(node, data)" size="mini">
                 <img class="tree_after_icon run" :src="emptySrc" alt="启用">
-                </el-button>
+                </el-button> 
                 <el-button v-if="data.id>0" type="text" size="mini" @click.stop="nodeDetail(node,data)">
                 <img class="tree_after_icon see" :src="emptySrc" alt="查看详情">
                 </el-button>
@@ -53,7 +50,7 @@
 <script>
 import qwForm from "components/qwform/qwform.vue"
 import qwModalForm from "components/qwform/qwMoalForm.vue"
-import {timestampToTime} from "common/dataModel/filter.js"
+import {timestampToTime} from "../dataModel/filter.js"
 import {mapState} from "vuex"
 import {
     warehouseList,
@@ -76,18 +73,12 @@ import {
     versionAdd,
     versionDel,
 
-} from 'common/dataModel/api.js';
+} from '../dataModel/api.js';
 export default {
     components:{
         qwModalForm
     },
     props:{
-        showMenus: {
-            type: Boolean,
-            default:()=>{
-                return false
-            }
-        },
         config:{
             type: Object,
             default:()=>{
@@ -683,6 +674,7 @@ export default {
         },
         //点击标题
         nodeLabelClicked(node,data){
+            debugger;
             this.config.curNode=node;
             setTimeout(() => {
                 this.$emit("nodeLabelClicked",node);
@@ -756,5 +748,5 @@ export default {
 }
 </script>
 <style lang="less">
-@import url("../../assets/style/pageCommon.less");
+@import url("~style/pageCommon.less");
 </style>

@@ -9,10 +9,10 @@ import productSpecification from 'page/productManagement/productArchives/product
 import priceAdjustmentMaintenance from 'page/productManagement/productPriceAdjustment/priceAdjustmentMaintenance/priceAdjustmentMaintenance.vue';//价格调节维护
 import releaseRecords from 'page/productManagement/productRelease/releaseRecords/releaseRecords.vue';//发布记录
 import see from 'page/productManagement/productRelease/see/see.vue';//查看
-import documentResources from 'page/resourceManagement/documentResources/documentResources.vue';//文件资源
-import newApplication from 'page/resourceManagement/cloudApplication/newApplication.vue';//云应用
-import authDialogBody from 'page/resourceManagement/apiInterface/authDialogBody.vue';//api接口
-import equipmentModel from 'page/resourceManagement/equipmentModel/equipmentModel.vue';//设备模型
+import documentResources from 'page/resource-management/document-resources/document-resources.vue';//文件资源
+import newApplication from 'page/resource-management/cloud-application/new-application.vue';//云应用
+import authDialogBody from 'page/resource-management/api-interface/auth-dialog-body.vue';//api接口
+import equipmentModel from 'page/resource-management/equipment-model/equipment-model.vue';//设备模型
 import accountReceivable from 'page/management/accountReceivable/accountReceivable.vue';//应收款管理...
 import collectionDeliveryManagement from 'page/management/collectionDeliveryManagement/collectionDeliveryManagement.vue';//收发货管理...
 import importAndExportAccountManagement from 'page/management/importAndExportAccountManagement/importAndExportAccountManagement.vue';//收发货管理...

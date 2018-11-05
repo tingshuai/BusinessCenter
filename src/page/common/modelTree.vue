@@ -319,7 +319,7 @@ export default {
                                     treeNamePath:'',
                                 },
                                 formBtnsStyle:"text-align:right",
-                                formBtns:[
+                                formBtns:[ 
                                     {
                                         size:"small",//medium / small / mini
                                         type:"primary",//primary / success / warning / danger / info / text
@@ -581,6 +581,7 @@ export default {
             node.loading=true;
             node.loaded=false;
             warehouseList({Vue:this,params:{parentId:data.id}}).then(res=>{
+                debugger;
                 if(res.model.length>0){
                   
                     this.config.maxLevel= this.config.maxLevel> (node.level+1)? this.config.maxLevel :node.level+1;
@@ -674,7 +675,7 @@ export default {
         },
         //点击标题
         nodeLabelClicked(node,data){
-            debugger;
+            // debugger;
             this.config.curNode=node;
             setTimeout(() => {
                 this.$emit("nodeLabelClicked",node);

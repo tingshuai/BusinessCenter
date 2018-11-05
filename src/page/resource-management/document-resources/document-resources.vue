@@ -1,3 +1,4 @@
+//文件资源
 <template>
 <div class="qwCommonPage">
 <modelTree ref="modelTree" :config="treeConfig" @delNode="BeforNodeDelete" @nodeLabelClicked="nodeLabelClicked"></modelTree>
@@ -114,9 +115,9 @@
 import qwTree from "components/qwform/qwtree.vue"
 import qwForm from "components/qwform/qwform.vue"
 import qwModalForm from "components/qwform/qwMoalForm.vue"
-import authQuery from "./authQuery.vue" //表格
+import authQuery from "./auth-query.vue" //表格
 import modelTree from "common/modelTree.vue"
-
+ 
 import {timestampToTime} from "./filter.js"
 import {mapState} from "vuex"
 import {
@@ -127,7 +128,7 @@ import {
     warehouseAble,
     warehouseDel,
     
-    dataModelList,
+    dataModelList, //点击标题
     dataModelGrid,
     dataModelAdd,
     dataModalAble,
@@ -246,7 +247,7 @@ export default {
                                         colStyle:"",
                                         key:"name",
                                         type:"input",
-                                        name:"模型名称",
+                                        name:"文件夹名称",
                                         disabled:false,
                                         clearable:true,
                                         suffixIcon:"",
@@ -311,7 +312,7 @@ export default {
                                 }
                             },
                         qwDialog:{
-                                title:"新增数据仓库模型",
+                                title:"新增文件夹",
                                 titleStyle:"background:#FFF;",
                                 dialogVisible:false,
                                 width:"480px",
@@ -389,7 +390,7 @@ export default {
                                         colStyle:"",
                                         key:"name",
                                         type:"input",
-                                        name:"模型名称",
+                                        name:"文件夹名称",
                                         disabled:false,
                                         clearable:true,
                                         suffixIcon:"",
@@ -539,7 +540,7 @@ export default {
                                 formData:{
                                 ableBy:"",//启用人
                                 ableTime:"",//启用时间
-                                label:"",//模型名称
+                                label:"",//文件夹名称
                                 isAble:"",//是否启用
                                 modifyBy:"",//修改人
                                 modifyTime:"",//修改时间
@@ -667,7 +668,7 @@ export default {
                             },
                             {   
                                 type:'text',
-                                label:"模型名称",
+                                label:"文件夹名称",
                                 key:"alias",
                                 value:""
                             },
@@ -773,7 +774,7 @@ export default {
                                         colStyle:"",
                                         key:"alias",
                                         type:"input",
-                                        name:"模型名称",
+                                        name:"文件夹名称",
                                         disabled:false,
                                         clearable:true,
                                         suffixIcon:"",
@@ -783,7 +784,7 @@ export default {
                                         rows:1,//textarea适用
                                         autoComplete:"off",
                                         readonly:false,
-                                        rules:[{required:true,message:"请输入模型名称",trigger:["input","change","blur"]}],
+                                        rules:[{required:true,message:"请输入文件夹名称",trigger:["input","change","blur"]}],
                                     },
                                     {
                                         key:"isPermission",
@@ -921,21 +922,24 @@ export default {
         },
         //点击标题
         nodeLabelClicked(node,data){
-            // debugger;
+          
             this.treeConfig.curNode=node;
             let params = {warehouseId: node.data.id}
             dataModelList({Vue:this,params:params}).then(res=>{
-                if(res.result){
+                //    debugger;
+                if(res.code){
                     this.changeToobarFilter(0);
-                    this.configFilter[0].items=res.model;
-                    if(res.model.length==0){
+                    this.configFilter[0].items=res.list;
+                    debugger;
+                    if(res.list.length==0){
+                        debugger;
                         this.setNodata(true);
                         this.configBlock.curMod="info"  
                         setTimeout(() => {
                             this.resetEditData();    
                         }, 30);                  
                     }else{
-                        this.configFilter[0].items=this.transFilterBtnData(res.model);
+                        this.configFilter[0].items=this.transFilterBtnData(res.list);
                         this.configBlock.curMod="info";                        
                         this.changFilterActiveIndex(0,0);
                     }

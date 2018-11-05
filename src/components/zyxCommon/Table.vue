@@ -261,6 +261,7 @@
   @theadColor: white;
   @theadImage: linear-gradient(to right, #4a8dd2, #2acaff);
   .myTable {
+    border:1px solid @theadColor;
     position: relative;
     // padding: 10px;
     margin-top:10px;
@@ -270,20 +271,21 @@
     .my-pagination {
       text-align: center;
       margin-top: 10px;
+      margin-bottom: 10px;
     }
     .el-table {
-      border: 1px solid #dee3e8;
+      border: 1px solid rgb(240, 242, 245);
     }
     .el-table td {
       padding: @colPading;
     }
     .el-table thead {
-      background-color: #dee3e8; // color: @theadColor;
+      background-color:rgb(240, 242, 245); // color: @theadColor;
       font-weight: 500; // background-image: @theadImage;
     }
     .has-gutter th,
     .has-gutter tr {
-      background-color: #dee3e8;
+      background-color: rgb(240, 242, 245);
     }
     .el-date-editor.el-input, .el-date-editor.el-input__inner{
         width: 130px;

@@ -73,7 +73,7 @@
 		batchDeleting, //批量删除云应用
 		BatchStartAndStopCloudApplication, //批量启停云应用
 	} from "./api.js"
-	import toastBody from './toastBody' //弹窗
+	import toastBody from './toast-body' //弹窗 
 	import mytable from "components/zyxCommon/Table.vue" //表格
 	export default {
 		components: {

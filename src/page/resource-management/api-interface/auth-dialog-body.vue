@@ -71,7 +71,7 @@
 		batchDeleting, //批量删除云应用
 		BatchStartAndStopCloudApplication, //批量启停云应用
 	} from "./api.js"
-	import toastBody from './toastBody' //弹窗
+	import toastBody from './toast-body' //弹窗
 	import mytable from "components/zyxCommon/Table.vue" //表格
 	export default {
 		components: {
@@ -382,7 +382,7 @@
 					this.toastAddData.dialogVisible = false;
 					})
             },
-			doClickHandler(index, option) { //分页搜索点击事件
+			doClickHandler(index, option) { //分页搜索点击事件 
 				switch(index){//点击的层级
 					case 0:{
 					    this.classifiedConfig[1].options=  [];
@@ -391,7 +391,16 @@
 						mar.forEach(list =>  {
 							list.label = list.key;
 							list.value = list.value;		
-							this.classifiedConfig[1].options.push(list); //接口分类
+							this.classifiedConfig[1].options.push(list); //行业领域
+
+							this.classifiedConfig[2].options=  [];
+							this.queryParam.industry= option.value;
+							let mars = list.children;
+							mars.forEach(lists =>  {
+								lists.label = lists.key;
+								lists.value = lists.value;		
+								this.classifiedConfig[2].options.push(lists); //应用专属
+							})
 						})
 						this.cloudApplication(); //云应用列表
 						break;
@@ -403,7 +412,7 @@
 						mars.forEach(lists =>  {
 							lists.label = lists.key;
 							lists.value = lists.value;		
-							this.classifiedConfig[2].options.push(lists); //行业领域
+							this.classifiedConfig[2].options.push(lists); //应用专属
 						})
 						this.cloudApplication(); //云应用列表
 						break;

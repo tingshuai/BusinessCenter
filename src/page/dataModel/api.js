@@ -1,7 +1,7 @@
 import http from "../../api/base.js"
 
-export let warehouseList = (data, self) => {
-    return http.fetchPost('/warehouse/list', data, self)
+export let warehouseList = (data, self) => { //获取父级文件夹
+    return http.fetchPost('/resources/folders/parents', data, self)
 }
 
 export let warehouseGrid = (data, self) => {

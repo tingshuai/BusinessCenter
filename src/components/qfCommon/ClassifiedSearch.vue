@@ -18,7 +18,7 @@
 		data() {
 			return {
 				width: 120,
-				curIndex:[0,0,0]
+				curIndex:[0,0,0,0]
 			};
 		},
 		methods: {

@@ -14,7 +14,7 @@
 			detailMsg
 		},
 		data() {
-			return { 
+			return {
 				classifiedConfig: [{
 					title: '市场名称:',
 					options: []
@@ -34,7 +34,6 @@
 			getDataList(){
 				let that = this;
 				productsList({Vue:this}).then(res=>{
-					// debugger;
 					that.dataList = res.list;
 					that.initData({isFirst:true,cur:[0,0,0],curRow:0})
 					that.$message.success("操作成功！");

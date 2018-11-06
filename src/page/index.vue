@@ -74,8 +74,8 @@ var vueObj= {
             childrens:[
               {
                 id: 12,
-                title:'单位组',
-                link:'/unitGroup'
+                title:'票据系统',
+                link:'/chartM'
               },
               {
                 id: 11,

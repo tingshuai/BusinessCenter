@@ -13,9 +13,22 @@
             <el-button @click="toggleAct('edit')" size="mini" :type="act == 'edit' ? 'primary' : 'default'">编辑</el-button>
             <el-button @click="toggleAct('delete')" size="mini" :type="act == 'delete' ? 'primary' : 'default'">删除</el-button>
             <el-button @click="toggleAct('unable')" size="mini" :type="act == 'unable' ? 'primary' : 'default'">停用</el-button>
-        </el-row>        
+        </el-row>
     </toolbars>
-    <qfTable :table="table" @editRow="editRow" @deleteRow="deleteRow"></qfTable>
+    <el-row>
+        <el-col :span="6">
+            <section class="top">单位组概况</section>
+            <section class="bottom">
+                <el-row>
+                    <el-col :span="10">cvbcb</el-col>
+                    <el-col :span="14">xcvxcbcb</el-col>
+                </el-row>
+            </section>
+        </el-col>
+        <el-col :span="18">
+            <qfTable :table="table" @editRow="editRow" @deleteRow="deleteRow"></qfTable>
+        </el-col>
+    </el-row>
     <form-page
         :config="dialogConfig"
     ></form-page>
@@ -27,7 +40,7 @@ import qfTable from "components/qfCommon/table.vue"
 import authDialogBody from "./authDialogBody.vue"
 import {mapState} from "vuex"
 import {
-    getUnitList,
+    getUnitList,getUnitItem
 } from './api.js';
 export default {
     components:{
@@ -42,13 +55,28 @@ export default {
     data(){
         return {
             act:"all",//选中的项目
+            dataList:[],
+            cur:[0,0,0,0],//选中项
+            dataLeft:{},
             dialogConfig:{
                 colum:"alone",//表单的列数.....
-                showDialog:true,
+                showDialog:false,
                 functional:"",//弹出框的函数名
                 dialogProps:{//传入的参数
 
-                }
+                },
+                items:[{
+                    type:"input",
+                    label:"标签1",
+                    value:""
+                },{
+                    type:"select",
+                    label:"select",
+                    value:"",
+                    options:[
+
+                    ]
+                }]
             },
             table:{
                 tableData:[],
@@ -109,21 +137,36 @@ export default {
 			}, {
 				title: '单位组:',
 				options: []
-            }]
+            }],
+            uniCondition:{
+                classId:"",
+                isAble:"",
+                modelId:"",
+                unitGroupId:""                
+            }
         }
     },
     mounted(){
-        this.unitList();
+        this.itemList();
     },
     methods:{
         /*关闭前调用*/ 
-        unitList(){
-            getUnitList({Vue:this}).then(res=>{
-                let _title = [];
+        unitList(params){
+            getUnitList({Vue:this,"params":params}).then(res=>{
                 this.table.tableData = res.list;
-                this.$message.success("操作成功！");
             })
         },
+        itemList(){
+            let that = this;
+            getUnitItem({Vue:this}).then(res=>{
+                that.dataList = res.list;
+                that.initData({
+                    "isFirst":true,
+                    "cur":[0,0,0,0],
+                    "curRow":0
+                })
+            })
+        },        
         editRow(index,row){
             debugger;
         },
@@ -133,32 +176,80 @@ export default {
         setEnable(index,row,item){
             debugger;
         },
-		selectedItem(item,curItem,curRow){
-			
-        },
         toggleAct(item){//点击button 切换act
             this.act = item;
             switch(item){
                 case 'all':{
-
+                    this.uniCondition.isAble = null;
+                    this.unitList();
+                    break;
                 }
-                case 'vEnable':{
-
+                case 'vEnable':{//只显示启用.....
+                    this.uniCondition.isAble = true;
+                    this.unitList(this.uniCondition);
+                    break;
                 }
-                case 'vUnable':{
-
+                case 'vUnable':{//只显示停用.....
+                    this.uniCondition.isAble = false;
+                    this.unitList(this.uniCondition);
+                    break;
                 }
                 case 'add':{
                     this.dialogConfig.showDialog = true;
+                    break;
                 }
                 case 'edit':{
-
+                    break;
                 }
                 case 'unable':{
-
+                    break;
                 }
             }
-        }
+        },
+		selectedItem(item,curItem,curRow){
+			this.initData({
+				"isFirst":false,
+				"cur":curItem,
+				"curRow":curRow
+            })
+            this.cur = curItem;
+        },
+        setSearchData(){
+            this.uniCondition.classId = this.classifiedConfig[1].options[this.cur[1]].value;
+            this.uniCondition.modelId = this.classifiedConfig[2].options[this.cur[2]].value;
+            this.uniCondition.unitGroupId = this.classifiedConfig[3].options[this.cur[3]].value;
+        },
+		initData(obj){
+            let _lastValue = this.dataList[obj.cur[0]].children[obj.cur[1]].children[obj.cur[2]].children[obj.cur[3]];
+            this.dataLeft = _lastValue;
+			switch(obj.curRow){//点击的层级
+				case 0:{
+                    if( obj.isFirst ){//是否是刚进来时。。。。
+						this.classifiedConfig[0].options = this.dataList;
+						this.classifiedConfig[1].options = this.dataList[0].children;
+						this.classifiedConfig[2].options = this.dataList[0].children[0].children;
+						this.classifiedConfig[3].options = this.dataList[0].children[0].children[0].children;
+                        this.dataLeft = this.classifiedConfig[3].options[0];//初始化左侧详情数据
+					}else{
+						this.classifiedConfig[1].options = this.dataList[obj.cur[0]].children;
+						this.classifiedConfig[2].options = this.dataList[obj.cur[0]].children[obj.cur[1]].children;
+						this.classifiedConfig[3].options = this.dataList[obj.cur[0]].children[obj.cur[1]].children[obj.cur[2]].children;
+					}
+                    break;
+				}
+				case 1:{
+                    this.classifiedConfig[2].options = this.dataList[obj.cur[0]].children[obj.cur[1]].children;
+                    this.classifiedConfig[3].options = this.dataList[obj.cur[0]].children[obj.cur[1]].children[obj.cur[2]].children;
+					break;
+				}
+				case 2:{
+                    this.classifiedConfig[3].options = this.dataList[obj.cur[0]].children[obj.cur[1]].children[obj.cur[2]].children;
+					break;
+				}
+			}
+            this.table.tableData = _lastValue.unitDtoList;
+            this.setSearchData();
+		}        
     }
 }
 </script>

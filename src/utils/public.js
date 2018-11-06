@@ -7,6 +7,7 @@ let port = '';
 export default {
   fetchGet(url, data={}) {
     let params = data.params ? this.setParams(data.params) : {};
+    debugger;
     return new Promise((resolve, reject) => {
       axios.get(this.getPocPort() + url, {
         params

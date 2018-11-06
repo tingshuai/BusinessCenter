@@ -18,6 +18,7 @@ import collectionDeliveryManagement from 'page/management/collectionDeliveryMana
 import importAndExportAccountManagement from 'page/management/importAndExportAccountManagement/importAndExportAccountManagement.vue';//收发货管理...
 import orderManagement from 'page/management/orderManagement/orderManagement.vue';//收发货管理...
 import invoice from 'page/management/controlOverInvoices/invoice/invoice.vue';//开具发票...
+import chartM from 'page/chart-m.vue';//开具发票...
 Vue.use(Router)
 export default new Router({
 	routes: [
@@ -27,89 +28,94 @@ export default new Router({
 			name: "404"
 		},
 		{
-			path: '/operatingProduct',
-			name: 'operatingProduct',
-			component: operatingProduct
-		},
-		{
-			path: '/productIntroduction',
-			name: 'productIntroduction',
-			component: productIntroduction
-		},
-		{
-			path: '/productSpecification',
-			name: 'productSpecification',
-			component: productSpecification
-		},
-		{
-			path: '/productMaintenance',
-			name: 'productMaintenance',
-			component: productMaintenance
-		},
-		{
-			path: '/unitGroup',
-			name: 'unitGroup',
-			component: unitGroup
-		},
-		{
-			path: '/priceAdjustmentMaintenance',
-			name: 'priceAdjustmentMaintenance',
-			component: priceAdjustmentMaintenance
-		},
-		{
-			path: '/releaseRecords',
-			name: 'releaseRecords',
-			component: releaseRecords
-		},
-		{
-			path: '/see',
-			name: 'see',
-			component: see
-		},
-		{  //文件资源
-			path: '/documentResources',
-			name: 'documentResources',
-			component: documentResources
-		},
-		{  //云应用
-			path: '/newApplication',
-			name: 'newApplication',
-			component: newApplication
-		},
-		{ //设备模型
-			path: '/equipmentModel',
-			name: 'equipmentModel',
-			component: equipmentModel
-		},
-		{ //api接口
-			path: '/authDialogBody',
-			name: 'authDialogBody',
-			component: authDialogBody
-		},
-		{
-			path: '/accountReceivable',
-			name: 'accountReceivable',
-			component: accountReceivable
-		},
-		{
-			path: '/collectionDeliveryManagement',
-			name: 'collectionDeliveryManagement',
-			component: collectionDeliveryManagement
-		},
-		{
-			path: '/invoice',
-			name: 'invoice',
-			component: invoice
-		},
-		{
-			path: '/importAndExportAccountManagement',
-			name: 'importAndExportAccountManagement',
-			component: importAndExportAccountManagement
-		},
-		{
-			path: '/orderManagement',
-			name: 'orderManagement',
-			component: orderManagement
+			path:'/chartM',
+			name:'chartM',
+			component: chartM
 		}
+		// {
+		// 	path: '/operatingProduct',
+		// 	name: 'operatingProduct',
+		// 	component: operatingProduct
+		// },
+		// {
+		// 	path: '/productIntroduction',
+		// 	name: 'productIntroduction',
+		// 	component: productIntroduction
+		// },
+		// {
+		// 	path: '/productSpecification',
+		// 	name: 'productSpecification',
+		// 	component: productSpecification
+		// },
+		// {
+		// 	path: '/productMaintenance',
+		// 	name: 'productMaintenance',
+		// 	component: productMaintenance
+		// },
+		// {
+		// 	path: '/unitGroup',
+		// 	name: 'unitGroup',
+		// 	component: unitGroup
+		// },
+		// {
+		// 	path: '/priceAdjustmentMaintenance',
+		// 	name: 'priceAdjustmentMaintenance',
+		// 	component: priceAdjustmentMaintenance
+		// },
+		// {
+		// 	path: '/releaseRecords',
+		// 	name: 'releaseRecords',
+		// 	component: releaseRecords
+		// },
+		// {
+		// 	path: '/see',
+		// 	name: 'see',
+		// 	component: see
+		// },
+		// {  //文件资源
+		// 	path: '/documentResources',
+		// 	name: 'documentResources',
+		// 	component: documentResources
+		// },
+		// {  //云应用
+		// 	path: '/newApplication',
+		// 	name: 'newApplication',
+		// 	component: newApplication
+		// },
+		// { //设备模型
+		// 	path: '/equipmentModel',
+		// 	name: 'equipmentModel',
+		// 	component: equipmentModel
+		// },
+		// { //api接口
+		// 	path: '/authDialogBody',
+		// 	name: 'authDialogBody',
+		// 	component: authDialogBody
+		// },
+		// {
+		// 	path: '/accountReceivable',
+		// 	name: 'accountReceivable',
+		// 	component: accountReceivable
+		// },
+		// {
+		// 	path: '/collectionDeliveryManagement',
+		// 	name: 'collectionDeliveryManagement',
+		// 	component: collectionDeliveryManagement
+		// },
+		// {
+		// 	path: '/invoice',
+		// 	name: 'invoice',
+		// 	component: invoice
+		// },
+		// {
+		// 	path: '/importAndExportAccountManagement',
+		// 	name: 'importAndExportAccountManagement',
+		// 	component: importAndExportAccountManagement
+		// },
+		// {
+		// 	path: '/orderManagement',
+		// 	name: 'orderManagement',
+		// 	component: orderManagement
+		// }
   ]
 })

@@ -1,7 +1,22 @@
 <!--form表单弹出框-->
 <template>
   <el-dialog title="收货地址" :visible.sync="config.showDialog">
-    <form-msg :configer="config">琼飞</form-msg>
+    <el-form ref="form" :model="formValue" label-width="80px">
+      <el-row>
+        <template v-for="(item,index) in config.items">
+          <el-col :span="item.span || 12" v-for="(item,index) in config.items">
+            <el-form-item :label="item.label" v-if="item.type == 'input'">
+              <el-input v-model="item.value"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="item.span || 12" v-if="item.type == 'select'">
+            <el-form-item :label="item.label">
+              <el-input v-model="item.value"></el-input>
+            </el-form-item>
+          </el-col>
+        </template>
+      </el-row>
+    </el-form>
   </el-dialog>
 </template>
 
@@ -10,67 +25,21 @@
     props:{
       config:{
         type:Object,
-        default:{}
+        default:{
+          items:[]
+        }
       }
     },
     components:{
-      formMsg:{
-            render: function (createElement) {
-                let _col;
-                function createControlBar(key){
-                  switch (key) {
-                    case "input":{
-                      return createElement("el-input",{
-
-                      })
-                    }
-                    case "select":{
-                      return createElement("el-select",{
-                        
-                      })
-                    }
-                    case "radioGroup":{
-                      return createElement("el-radio-group",{
-                        
-                      })
-                    }
-                    case "checkboxGroup":{
-                      return createElement("el-checkbox-group",{
-                        
-                      })
-                    }                       
-                    default:
-                      break;
-                  }
-                }
-                if( this.configer.colum == "alone" ){//单列............
-                    _col = createElement(
-                      "el-form-item",
-                      createControlBar
-                    )
-                }else{//双列...........
-
-                }
-                return createElement(
-                    'el-form',
-                    _col
-                )
-            },
-            props: {
-                configer: {
-                    type: Object,
-                    required: true
-                }
-            }
-        }
+      
     },
     data(){
       return{
-
+        formValue:{}
       }
     },
     mounted(){
-
+      
     },
     methods:{
 

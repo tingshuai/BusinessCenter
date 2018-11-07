@@ -36,13 +36,18 @@ export default {
                         'left':'',
                         'top':'',
                         "width":'500px',
-                        "height":"500px"
+                        "height":"500px",
+                        "-moz-user-select": "none",
+                        "-webkit-user-select": "none",
+                        "-ms-user-select": "none",
+                        "-khtml-user-select": "none",
+                        "user-select": "none",                        
                     },
                     attribute:{
-                        
                     },
                     attrs:{
-                        draggable:true,
+                        draggable:false,
+                        id:"container"
                     },
                     class:{
 
@@ -58,14 +63,15 @@ export default {
                             'border':"1px solid red",
                             'fontSize':'22px',
                             'position':'absolute',
-                            'left':'',
+                            'left':'20px',
                             'top':'',
                         },
                         attribute:{
-                            
+
                         },
                         attrs:{
-                            draggable:true,
+                            draggable:false,
+                            "disabled":true
                         },
                         class:{
 
@@ -86,7 +92,7 @@ export default {
                             
                         },
                         attrs:{
-                            draggable:true
+                            draggable:false
                         },
                         class:{
 

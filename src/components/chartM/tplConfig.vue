@@ -11,6 +11,10 @@
 </div>
 </template>
 <script>
+var $ = require('jquery');
+var jQueryBridget = require('jquery-bridget');
+var Draggabilly = require('draggabilly');
+jQueryBridget( 'draggabilly', Draggabilly, $ );
 import {mapState} from "vuex"
 export default {
     props:{
@@ -28,45 +32,31 @@ export default {
                    class: _c.class,
                    attrs:_c.attrs,
                    on:{
-                       mousemove(e){
-                           if( _c.curIndex != '' ){
-                               that.$emit('itemFocusEvent','',e,'');
-                           }
-                       },
-                       mouseup:function(e){
-                          that.$emit('itemFocusEvent','',e,'');
-                       },
-                       mouseleave:function(e){
-                          that.$emit('itemFocusEvent','',e,'');
-                       }
+                    
                    },
                 },this.config.listBar.map(function (item,index,array) {
                     if( item.tag == 'input' ){
-                        return createElement('input',{
-                            style: item.style,
+                        return createElement('div',{
+                            style: {
+                                ...item.style,
+                                cursor:'move'
+                            },
                             class: item.class,
-                            attrs:item.attrs,
-                            on:{
-                                input:function(e){
-                                    debugger;
+                            attrs: item.attrs,
+                            on:{}
+                        },[createElement('input',{
+                                style: {},
+                                class: [],
+                                attrs: {},
+                                domProps:{
+                                    value:item.value
                                 },
-                                // dragstart:function(e){
-                                    
-                                // },
-                                // drag:function(e){
-                                //     that.$emit('itemFocusEvent',index,e,item);                                   
-                                // },
-                                // dragend:function(e){
-                                //     that.$emit('itemFocusEvent',index,e,item);
-                                // },
-                                mousedown:function(e){
-                                    that.$emit('itemFocusEvent',index,e,item);
-                                },
-                                mouseup:function(e){
-                                    that.$emit('itemFocusEvent',index,e,item);
+                                on:{
+                                    input:function(e){
+                                        self.$emit('input',e.target.value)
+                                    }
                                 }
-                            }
-                        })
+                        })])
                     }else if( item.tag == "text" ){
                         return createElement('span',{
                             style: item.style,
@@ -75,23 +65,7 @@ export default {
                             domProps: {
                                 innerHTML: item.value
                             },
-                            on:{
-                                input:function(e){
-                                    debugger;
-                                },
-                                // dragstart:function(e){
-                                //     that.$emit('itemFocusEvent',index,e,item);
-                                // },
-                                // dragend:function(e){
-                                //     // debugger;
-                                // },                               
-                                mousedown:function(e){
-                                    that.$emit('itemFocusEvent',index,e,item);
-                                },
-                                mouseup:function(e){
-                                    that.$emit('itemFocusEvent',index,e,item);
-                                }                             
-                            }
+                            on:{}
                         })
                     }
                 }))
@@ -122,7 +96,8 @@ export default {
             target: {
                 offsetX:"",
                 offsetY:""
-            }
+            },
+            draggabilly:"",//draggabilly对象....
         }
     },
     mounted(){
@@ -131,6 +106,9 @@ export default {
             let box = document.getElementById('container');
             this.containerPosi.clientLeft = box.getBoundingClientRect().left;
             this.containerPosi.clientTop = box.getBoundingClientRect().top;
+            this.draggabilly = $('._item').draggabilly({
+                containment:"#container",
+            })
         })
     },
     methods:{
@@ -143,7 +121,6 @@ export default {
                 let _top = e.clientY - this.containerPosi.clientTop - this.target.offsetY;
                 _target.style.left = _left + 'px';
                 _target.style.top = _top + 'px';
-                debugger;
                 // console.log( e.clientX , this.containerPosi.clientLeft , this.target.offsetX , _left)
                 // console.log( e.clientY , this.containerPosi.clientTop , e.offsetY , _top);
             }else if( e.type == 'mousedown' ){
@@ -158,10 +135,23 @@ export default {
             }else if( e.type == "mouseleave" ){
                 // 指示目标元素为空.......
                 this.config.container.curIndex = '';
-                console.log( "mouseleave" )
+            }else if( e.type == 'drag' ){
+
+            }else if( e.type == 'dragstart' ){
+
+            }else if( e.type == 'dragend' ){
+                
             }
         }
-    }
+    },
+    watch:{
+        config:{
+            handler(n,o){
+                console.log(n,o)
+            },
+            deep:true
+        }
+    }    
 }
 </script>
 <style lang="less">

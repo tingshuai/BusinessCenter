@@ -2,7 +2,7 @@
 <div class="">
     <aside class="controlBar">
         <section>
-            <tpl-config :config="chartData"></tpl-config>
+            <tpl-config ref="chartCont" :config="chartData"></tpl-config>
         </section>
     </aside>
     <aside class="container">
@@ -27,7 +27,7 @@ export default {
             chartData:{
                 container:{
                     id:new Date().getTime(),
-                    tag:"input",
+                    tag:"",
                     value:"999",
                     style:{
                         'border':"1px solid red",
@@ -41,17 +41,15 @@ export default {
                         "-webkit-user-select": "none",
                         "-ms-user-select": "none",
                         "-khtml-user-select": "none",
-                        "user-select": "none",                        
+                        "user-select": "none",
                     },
                     attribute:{
-                    },
-                    attrs:{
-                        draggable:false,
-                        id:"container"
-                    },
-                    class:{
 
                     },
+                    attrs:{
+                        id:"container"
+                    },
+                    class:[],
                     curIndex:''//点击的当前项目下标....
                 },
                 listBar:[
@@ -70,12 +68,9 @@ export default {
 
                         },
                         attrs:{
-                            draggable:false,
                             "disabled":true
                         },
-                        class:{
-
-                        }
+                        class:["_item"]
                     },
                     {
                         id:new Date().getTime(),
@@ -87,16 +82,15 @@ export default {
                             'position':'absolute',
                             'left':'100px',
                             'top':'100px',
+                            'cursor':'move'
                         },
                         attribute:{
                             
                         },
                         attrs:{
-                            draggable:false
+                            
                         },
-                        class:{
-
-                        }
+                        class:["_item"]
                     }
                 ]
             }
@@ -104,6 +98,9 @@ export default {
     },
     mounted(){
         // this.init();
+        this.$nextTick(()=>{
+            this.$refs.chartCont
+        })
     },
     methods:{
         /*关闭前调用*/ 

@@ -19,7 +19,6 @@ import Loading from 'components/zyxCommon/Loading.vue' //loading
 import toolbar from 'components/zyxCommon/toolbar.vue' //按纽组
 import page from './components/theme/page.vue'
 
-
 Vue.component('toolbar', toolbar) //按纽组
 Vue.component('toolbars', toolbars)  //工具栏
 Vue.component('PageTool', pagetool)  //分页栏

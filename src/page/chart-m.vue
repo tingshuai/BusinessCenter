@@ -1,21 +1,29 @@
 <template>
-<div class="">
+<div class="chartPage">
     <aside class="controlBar">
-        <section>
-            <tpl-config ref="chartCont" :config="chartData"></tpl-config>
-        </section>
+        <control-bar ref="controlBar" @showColorPicker="showColorPicker" :colorPicker="colorPicker" :controlConfig="controlConfig"></control-bar>
     </aside>
     <aside class="container">
-
+        <tpl-config ref="chartCont" :config="chartData"></tpl-config>
     </aside>
+    <chrome-picker v-show="colorPicker.show" :style="colorPicker.style" id="colorPicker" ref="colorPicker" :value="colorPicker.color" @input="updateValue"></chrome-picker>
 </div>
 </template>
 <script>
 import {mapState} from "vuex"
-import tplConfig from 'components/chartM/tplConfig.vue'
+import tplConfig from 'components/chartM/tplConfig.vue';
+import controlBar from 'components/chartM/controlBar.vue';
+//颜色拾取器
+import { Chrome } from 'vue-color'
+// draggabilly移动插件...
+var $ = require('jquery');
+var jQueryBridget = require('jquery-bridget');
+var Draggabilly = require('draggabilly');
+jQueryBridget( 'draggabilly', Draggabilly, $ );
 export default {
     components:{
-        tplConfig
+        tplConfig,controlBar,
+        'chrome-picker': Chrome
     },
     computed:{
         ...mapState({
@@ -24,6 +32,15 @@ export default {
     },
     data(){
         return {
+            colorPicker:{
+                color:"#ffffff",
+                show:false,
+                style:{
+                    top:0,
+                    left:0
+                }
+            },
+            controlConfig:{},
             chartData:{
                 container:{
                     id:new Date().getTime(),
@@ -35,6 +52,7 @@ export default {
                         'position':'relative',
                         'left':'',
                         'top':'',
+                        "background-color":"#ffffff",
                         "width":'500px',
                         "height":"500px",
                         "-moz-user-select": "none",
@@ -99,13 +117,25 @@ export default {
     mounted(){
         // this.init();
         this.$nextTick(()=>{
-            this.$refs.chartCont
+            let that = this;
+            document.body.addEventListener( "click", (e)=>{
+                let len = $('#colorPicker').has(e.target).length;
+                if ( len == 0 ) {
+                    that.colorPicker.show = false;
+                }
+            })
         })
     },
     methods:{
-        /*关闭前调用*/ 
-        ruleDialogClose(){
-           
+        updateValue(val){
+            // 选择颜色时为相应元素赋值.....
+            this.colorPicker.color = val.hex;
+            this.chartData.container.style['background-color'] = val.hex;
+        },
+        showColorPicker(e, _color, _type){//定位显示颜色选择器....
+            this.colorPicker.show = true;
+            this.colorPicker.style.left = e.clientX + 'px';
+            this.colorPicker.style.top = e.clientY + 'px';
         }
     }
 }
@@ -114,6 +144,20 @@ export default {
 @import url("~style/pageCommon.less");
 .qwCommonPage{
 
+}
+.chartPage{
+    display:flex;
+    justify-content:flex-start;
+    align-items:flex-start;
+    .controlBar{
+        width:300px;
+    }
+}
+.controlBar{
+    width:"";
+}
+#colorPicker{
+    position:absolute;
 }
 </style>
 

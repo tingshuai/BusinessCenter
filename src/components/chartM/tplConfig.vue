@@ -1,10 +1,5 @@
 <template>
 <div class="">
-    <aside class="controlBar">
-        <section>
-            <div class="tit">模配置</div>
-        </section>
-    </aside>
     <aside class="container">
         <anchored ref="container" :level="2" :config="config" @itemFocusEvent="itemFocusEvent">sdfsf</anchored>
     </aside>
@@ -156,9 +151,9 @@ export default {
 </script>
 <style lang="less">
 @import url("~style/pageCommon.less");
-.qwCommonPage{
+    .qwCommonPage{
 
-}
+    }
 </style>
 
 

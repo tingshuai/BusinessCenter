@@ -4,7 +4,7 @@
         <control-bar ref="controlBar" @showColorPicker="showColorPicker" :colorPicker="colorPicker" :controlConfig="controlConfig"></control-bar>
     </aside>
     <aside class="container">
-        <tpl-config ref="chartCont" :config="chartData"></tpl-config>
+        <tpl-config @pSwitchLayer="pSwitchLayer" @addPitem="addItem" ref="chartCont" :config="chartData"></tpl-config>
     </aside>
     <chrome-picker v-show="colorPicker.show" :style="colorPicker.style" id="colorPicker" ref="colorPicker" :value="colorPicker.color" @input="updateValue"></chrome-picker>
 </div>
@@ -13,6 +13,7 @@
 import {mapState} from "vuex"
 import tplConfig from 'components/chartM/tplConfig.vue';
 import controlBar from 'components/chartM/controlBar.vue';
+import * as _chartData from 'components/chartM/chartData.js';
 //颜色拾取器
 import { Chrome } from 'vue-color'
 // draggabilly移动插件...
@@ -41,81 +42,10 @@ export default {
                 }
             },
             controlConfig:{},
-            chartData:{
-                container:{
-                    id:new Date().getTime(),
-                    tag:"",
-                    value:"999",
-                    style:{
-                        'border':"1px solid red",
-                        'fontSize':'22px',
-                        'position':'relative',
-                        'left':'',
-                        'top':'',
-                        "background-color":"#ffffff",
-                        "width":'500px',
-                        "height":"500px",
-                        "-moz-user-select": "none",
-                        "-webkit-user-select": "none",
-                        "-ms-user-select": "none",
-                        "-khtml-user-select": "none",
-                        "user-select": "none",
-                    },
-                    attribute:{
-
-                    },
-                    attrs:{
-                        id:"container"
-                    },
-                    class:[],
-                    curIndex:''//点击的当前项目下标....
-                },
-                listBar:[
-                    {
-                        id:new Date().getTime(),
-                        tag:"input",
-                        value:"999",
-                        style:{
-                            'border':"1px solid red",
-                            'fontSize':'22px',
-                            'position':'absolute',
-                            'left':'20px',
-                            'top':'',
-                        },
-                        attribute:{
-
-                        },
-                        attrs:{
-                            "disabled":true
-                        },
-                        class:["_item"]
-                    },
-                    {
-                        id:new Date().getTime(),
-                        tag:"text",
-                        value:"99",
-                        style:{
-                            'border':"1px solid red",
-                            'fontSize':'22px',
-                            'position':'absolute',
-                            'left':'100px',
-                            'top':'100px',
-                            'cursor':'move'
-                        },
-                        attribute:{
-                            
-                        },
-                        attrs:{
-                            
-                        },
-                        class:["_item"]
-                    }
-                ]
-            }
+            chartData:_chartData.de
         }
     },
     mounted(){
-        // this.init();
         this.$nextTick(()=>{
             let that = this;
             document.body.addEventListener( "click", (e)=>{
@@ -123,19 +53,30 @@ export default {
                 if ( len == 0 ) {
                     that.colorPicker.show = false;
                 }
-            })
+            });
         })
     },
     methods:{
         updateValue(val){
             // 选择颜色时为相应元素赋值.....
-            this.colorPicker.color = val.hex;
-            this.chartData.container.style['background-color'] = val.hex;
+            this.colorPicker.color = val.hex8;
+            this.chartData.container.style['background-color'] = val.hex8;
         },
         showColorPicker(e, _color, _type){//定位显示颜色选择器....
             this.colorPicker.show = true;
             this.colorPicker.style.left = e.clientX + 'px';
             this.colorPicker.style.top = e.clientY + 'px';
+        },
+        addItem(e,type,containerPosi){//拖动以添加项目.....
+            let _data = JSON.parse( JSON.stringify(_chartData[type]) ) ;
+            _data.style.left = e.clientX - containerPosi.clientLeft + 'px';
+            _data.style.top = e.clientY - containerPosi.clientTop + 'px';
+            this.chartData.listBar.splice(this.chartData.listBar.length,0,_data);
+        },
+        pSwitchLayer(e,index){
+            // let temp = this.chartData.listBar[index];//选中的呢一个....
+            // this.chartData.listBar.splice(index, 1);
+            // this.chartData.listBar.push( temp );
         }
     }
 }

@@ -7,6 +7,7 @@ import ajax from './api/base.js'
 import router from './router/index.js' 
 import store from './store/index.js'
 import 'babel-polyfill'
+import './fonts/iconfont.js'
 
 import pagetool from './components/pagetool.vue' //分页栏
 import myToast from './components/Toast.vue' //弹窗
@@ -33,6 +34,9 @@ import 'babel-polyfill';
 //   this.$store.commit('SET_CONTEXTMENU_TARGET',self);
 //   this.$store.commit('SET_SHOW_CONTEXTMENU',true);
 // }
+import VueDraggableResizable from 'vue-draggable-resizable'
+ 
+Vue.component('vue-draggable-resizable', VueDraggableResizable)
 Vue.use(Element);
 Vue.component('Page',page)
 Vue.component('ClassifiedSearch', ClassifiedSearch)

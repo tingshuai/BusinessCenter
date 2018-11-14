@@ -41,16 +41,12 @@ export default {
             let that = this;
             document.addEventListener("mousemove",(e)=>{
                 if ( that.selItem.type != "" ) {
-                    if( that.config.type == "opacity" ){//如果是透明度则控制数值在0 - 100 之间
-                        if( this.selItem.value + that.selItem.clientY - e.clientY < 0 ){
-                            that.config.value = 0;
-                        }else if( this.selItem.value + that.selItem.clientY - e.clientY > 100 ){
-                            that.config.value = 100;
-                        }else{
-                            that.config.value = this.selItem.value + that.selItem.clientY - e.clientY;
-                        }
+                    if( this.selItem.value + that.selItem.clientY - e.clientY < this.config.min ){
+                        that.config.value = this.config.min;
+                    }else if( this.selItem.value + that.selItem.clientY - e.clientY > this.config.max ){
+                        that.config.value = this.config.max;
                     }else{
-                        that.config.value = that.selItem.clientY - e.clientY;
+                        that.config.value = this.selItem.value + that.selItem.clientY - e.clientY;
                     }
                 }
             })
@@ -65,16 +61,12 @@ export default {
             this.selItem.value = this.config.value;
         },
         onScroll(e){
-            if( this.config.type == "opacity" ){
-                if( this.config.value > 0 && this.config.value < 100 ){
-                    e.deltaY > 0 ? this.config.value-- : this.config.value++;
-                }else if( this.config.value == 0 ){
-                    e.deltaY > 0 ? this.config.value = 0 : this.config.value++;
-                }else if( this.config.value == 100 ){
-                    e.deltaY > 0 ? this.config.value-- : this.config.value = 100;
-                }
-            }else{
+            if( this.config.value > this.config.min && this.config.value < this.config.max ){
                 e.deltaY > 0 ? this.config.value-- : this.config.value++;
+            }else if( this.config.value == this.config.min ){
+                e.deltaY > 0 ? this.config.value = this.config.min : this.config.value++;
+            }else if( this.config.value == this.config.max ){
+                e.deltaY > 0 ? this.config.value-- : this.config.value = this.config.max;
             }
         },
         updata(e){

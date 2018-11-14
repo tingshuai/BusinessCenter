@@ -17,6 +17,7 @@
     "less": "^3.0.4",
     "vue": "^2.5.2",
     "vue-color": "^2.7.0",
+    "vue-draggable-resizable": "^1.7.3",
     "vue-router": "^3.0.1",
     "vue-scroll": "^2.1.9",
     "vuedraggable": "^2.16.0",

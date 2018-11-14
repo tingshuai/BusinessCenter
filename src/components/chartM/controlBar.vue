@@ -13,8 +13,8 @@
                 </div>
                 <div class="item">
                     <h5>背景设置</h5>
-                    <aside id="setBg">
-                        <div class="selBgColor" @click.stop="selColor">
+                    <aside class="setBg">
+                        <div class="selBgColor" @click.stop="selColor($event,'tplBgColor')">
                             <span class="colorQuote" :style="{ 'background-color': colorPicker.color }"></span>
                             <span>选择颜色</span>
                         </div>
@@ -32,22 +32,97 @@
                 </div>                
             </el-collapse-item>
             <el-collapse-item title="文字配置" name="2">
-                <div>控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；</div>
-                <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
+                <section>
+                    <span>字体</span>
+                    <el-select v-model="sel.font.fontFamily" placeholder="请选择字体">
+                        <el-option v-for="item in font" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                </section>
+                <section>
+                    <span>文字内容</span>
+                    <el-radio-group class="radioGroup" size="mini" v-model="sel.font.fontType">
+                        <el-radio :label="1">固定值</el-radio>
+                        <el-radio :label="2">参数</el-radio>
+                    </el-radio-group>
+                    <el-input size="mini" v-model="sel.font.value" :placeholder="sel.font.placeholder"></el-input>                    
+                </section>
+                <aside class="setBg">
+                    <div class="selBgColor" @click.stop="selColor($event,'fontColor')">
+                        <span class="colorQuote" :style="{ 'background-color': colorPicker.color }"></span>
+                        <span>字体颜色</span>
+                    </div>
+                </aside>                
+                <div class="quoteItem">
+                    <value-quote :config="quoteFont"></value-quote>
+                </div>
             </el-collapse-item>
             <el-collapse-item title="矩形配置" name="3">
-                <div>简化流程：设计简洁直观的操作流程；</div>
-                <div>清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；</div>
-                <div>帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。</div>
+                <aside class="setBg">
+                    <div class="selBgColor" @click.stop="selColor($event,'blockQuote')">
+                        <span class="colorQuote" :style="{ 'background-color': colorPicker.color }"></span>
+                        <span>背景填充</span>
+                    </div>
+                    <div class="selBgColor" @click.stop="selColor($event,'blockQuote')">
+                        <span class="colorQuote" :style="{ 'background-color': colorPicker.color }"></span>
+                        <span>边框</span>
+                    </div>
+                </aside>
+                <div class="quoteItem">
+                    <value-quote :config="quoteRectFillet"></value-quote>
+                </div>
+                <div class="quoteItem">
+                    <value-quote :config="quoteRectBorder"></value-quote>
+                </div>                
             </el-collapse-item>
             <el-collapse-item title="图片配置" name="4">
-                <div>用户决策：根据场景可给予用户操作建议或安全提示，但不能代替用户进行决策；</div>
-                <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
+                <section>
+                    <span>图片来源</span>
+                    <el-radio-group class="radioGroup" size="mini" v-model="sel.font.fontType">
+                        <el-radio :label="1">固定值</el-radio>
+                        <el-radio :label="2">参数</el-radio>
+                    </el-radio-group>
+                    <el-input size="mini" v-model="sel.font.value" :placeholder="sel.font.placeholder"></el-input>                    
+                </section>
+                <div class="quoteItem">
+                    <value-quote :config="quoteImgWidth"></value-quote>
+                </div>
+                <div class="quoteItem">
+                    <value-quote :config="quoteImgHeight"></value-quote>
+                </div>
+                <div class="quoteItem">
+                    <value-quote :config="quoteImgFillet"></value-quote>
+                </div>         
+                <div class="quoteItem">
+                    <value-quote :config="quoteImgOpacity"></value-quote>
+                </div>
             </el-collapse-item>
             <el-collapse-item title="表格配置" name="5">
-                <div>用户决策：根据场景可给予用户操作建议或安全提示，但不能代替用户进行决策；</div>
-                <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
+                
             </el-collapse-item>
+            <el-collapse-item title="控件" name="6">
+                <section class="control">
+                    <aside draggable="true" @dragstart="dragStart($event,'rect')">
+                        <svg class="icon controlItem" aria-hidden="true">
+                            <use xlink:href="#icon-juxing"></use>
+                        </svg>
+                    </aside>
+                    <aside draggable="true" @dragstart="dragStart($event,'font')">
+                        <svg class="icon controlItem" aria-hidden="true">
+                            <use xlink:href="#icon-tubiaozhizuomoban"></use>
+                        </svg>
+                    </aside>
+                    <aside draggable="true" @dragstart="dragStart($event,'img')">
+                        <svg class="icon controlItem" aria-hidden="true">
+                            <use xlink:href="#icon-tupian"></use>
+                        </svg>
+                    </aside>
+                    <aside draggable="true" @dragstart="dragStart($event,'table')">
+                        <svg class="icon controlItem" aria-hidden="true">
+                            <use xlink:href="#icon-charts-biaoge"></use>
+                        </svg>
+                    </aside>
+                </section>
+            </el-collapse-item>            
         </el-collapse>
     </section>
 </template>
@@ -73,10 +148,40 @@ export default {
     },
     data(){
         return {
+            sel:{//更改的字段值..
+                font:{
+                    fontFamily:"",
+                    fontType:1,
+                    value:"",
+                    placeholder:""
+                }
+            },
+            font:[//字体列表.....
+                {
+                    label:"宋体",
+                    value:"\u5b8b\u4f53"
+                },
+                {
+                    label:"仿宋",
+                    value:"\u4eff\u5b8b"
+                },
+                {
+                    label:"微软雅黑",
+                    value:"\u5fae\u8f6f\u96c5\u9ed1"
+                },
+                {
+                    label:"黑体",
+                    value:"\u9ed1\u4f53"
+                },
+                {
+                    label:"楷体",
+                    value:"\u6977\u4f53"
+                }
+            ],
             tplConfig:{//模板配置.....
                 tplSize:3,//模板尺寸
             },
-            actItem:"1",
+            actItem:"6",
             quoteOpacity:{//透明度块....
                 title:"透明度",
                 value:50,
@@ -84,7 +189,63 @@ export default {
                 step:1,
                 max:100,
                 min:0
-            }
+            },
+            quoteFont:{
+                title:"字体大小(px)",
+                value:12,
+                type:"fontSize",
+                step:1,
+                max:50,
+                min:0
+            },
+            quoteRectFillet:{
+                title:"圆角(%)",
+                value:0,
+                type:"quoteRectFillet",
+                step:1,
+                max:100,
+                min:0
+            },
+            quoteRectBorder:{
+                title:"粗细(px)",
+                value:0,
+                type:"thickness",
+                step:1,
+                max:1000,
+                min:0                
+            },
+            quoteImgWidth:{
+                title:"图片宽度(px)",
+                value:0,
+                type:"imgWidth",
+                step:1,
+                max:1000,
+                min:0                    
+            },
+            quoteImgHeight:{
+                title:"图片高度(px)",
+                value:0,
+                type:"imgHeight",
+                step:1,
+                max:1000,
+                min:0                    
+            },
+            quoteImgFillet:{
+                title:"圆角(%)",
+                value:0,
+                type:"imgFillet",
+                step:1,
+                max:100,
+                min:0
+            },    
+            quoteImgOpacity:{
+                title:"透明度(%)",
+                value:0,
+                type:"quoteImgOpacity",
+                step:1,
+                max:100,
+                min:0
+            },                     
         }
     },
     mounted(){
@@ -100,8 +261,11 @@ export default {
         uploadChange(e){
             debugger;
         },
-        selColor(e){//显示颜色选择器.....
-            this.$emit("showColorPicker", e , this.colorPicker.color, 'show')
+        selColor(e,target){//显示颜色选择器.....
+            this.$emit( "showColorPicker", e , this.colorPicker.color, target );
+        },
+        dragStart(e,type){//开始拖动
+            e.dataTransfer.setData( "type",type );
         }
     },
     watch:{
@@ -120,7 +284,7 @@ export default {
     height:20px;
     border:1px solid #ddd;
 }
-#setBg{
+.setBg{
     height:30px;
     line-height:30px;
     vertical-align:middle;
@@ -137,8 +301,18 @@ export default {
     margin-left:10px;
 }
 .radioGroup{
-    display:flex;
-    flex-wrap:wrap;
+    display:inline-block;
+}
+.quoteItem{
+    display: inline-block;
+}
+.control{
+    display: flex;
+    justify-content: space-around;
+    font-size: 35px;    
+}
+.controlItem{
+     
 }
 </style>
 
